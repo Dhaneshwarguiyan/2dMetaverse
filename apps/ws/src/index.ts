@@ -13,7 +13,7 @@ interface player {
 const players = new Map<number,player>();
 //to get the info of the clients connected to the room
 const clientsMessage = new Map<string,WebSocket[]>();
-const clientsGame = new Map<string,WebSocket[]>();
+// const clientsGame = new Map<string,WebSocket[]>();
 
 wss.on('connection', (socket) => {
   let myId = -1;
@@ -40,14 +40,14 @@ wss.on('connection', (socket) => {
       const {id,x,y,room} = parsedData.payload;
 
       //logic to store the socket w.r.t room
-      if(clientsGame.has(room)){
-        const clientArray = clientsGame.get(room);
-        if(clientArray && !clientArray?.includes(socket)){
-          clientsGame.set(room,[...clientArray,socket])
-        }
-      }else{
-        clientsGame.set(room,[socket]);
-      }
+      // if(clientsMessage.has(room)){
+      //   const clientArray = clientsMessage.get(room);
+      //   if(clientArray && !clientArray?.includes(socket)){
+      //     clientsMessage.set(room,[...clientArray,socket])
+      //   }
+      // }else{
+      //   clientsMessage.set(room,[socket]);
+      // }
 
 
       myId = id;
@@ -85,7 +85,7 @@ wss.on('connection', (socket) => {
           y
         }
       }
-      const playerArray = clientsGame.get(room);
+      const playerArray = clientsMessage.get(room);
       playerArray?.forEach((ws)=>{
         if(ws !== socket){
           ws.send(JSON.stringify(messageData))
@@ -125,7 +125,7 @@ wss.on('connection', (socket) => {
     players.delete(myId);
 
     //removing socket instance from message memory
-    
+
 
 
     // broadcasting the removal of the client

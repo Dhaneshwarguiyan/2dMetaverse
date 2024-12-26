@@ -107,7 +107,6 @@ export default class WorldScene extends Phaser.Scene{
         //listen for the updates for other players from server
         this.messageListener = (event: { data: string; }) => {
             const parsedData = JSON.parse(event.data);
-            console.log(parsedData);
             if(parsedData.type === 'init'){
                 //initializing other players
                 parsedData.players.forEach((playerData:{id:string,x:number,y:number}) => {
@@ -142,6 +141,8 @@ export default class WorldScene extends Phaser.Scene{
                 }
             }
           };
+
+        this.socket?.addEventListener('message',this.messageListener);
 
         //emit player position to the server in regular interval
         this.time.addEvent({
