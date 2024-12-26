@@ -7,7 +7,6 @@ const Text = ({text,sender}:{text:string,sender:string}) => {
       <div>
         <div className='text-black text-sm font-light'>
             {sender}
-            Dhane
         </div>
         <div className='text-black'>
             {text}

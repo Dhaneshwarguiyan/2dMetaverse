@@ -1,8 +1,8 @@
 import Phaser from "phaser";
-
+// import { getSocket } from "../../utils/socket";
 
 export default class WorldScene extends Phaser.Scene{
-    socket!:WebSocket;
+    socket!:WebSocket | null;
     player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
     otherPlayer!: Map<string, Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
@@ -21,14 +21,18 @@ export default class WorldScene extends Phaser.Scene{
     foreground!: Phaser.Tilemaps.TilemapLayer | null;
     obstacles!: Phaser.Tilemaps.TilemapLayer | null;
     name!: string;
+    room!: string;
+    messageListener!: (event: { data: string; }) => void;
     
     constructor(){
         super({key:"WorldScene"});
         this.otherPlayer = new Map(); 
     }
-    init (data:{socket:WebSocket,name:string}){
+
+    init (data:{socket:WebSocket,name:string,room:string}){
         this.socket = data.socket;
         this.name = data.name;
+        this.room = data.room;
     }
     
     preload(){
@@ -74,25 +78,37 @@ export default class WorldScene extends Phaser.Scene{
         this.player.scaleY = this.player.scaleX;
 
 
-        this._id = this.name;
-        console.log("client connected to server");
-            //generate a diffrent sort of id cause it can cause errors cause two people can have the same id
+        const generateId = () => {
+            const random = "abcdefghijklmnopqrstuvwxyz1234567890";
+            let answer = "";
+            for(let i = 0;i<8;i++){
+                answer = answer + random[Math.floor(Math.random()*36)];
+            }
+            return answer;
+        }
 
+        this._id = generateId();
 
-
+        if(this.socket && this.socket.readyState === WebSocket.OPEN){
+            this.socket.send(JSON.stringify({
+                type:"joingame",
+                payload:{
+                    id:this._id,
+                    x:this.player.x,
+                    y:this.player.y,
+                    room:this.room
+                }
+            }))
+            console.log("client connected to server");
+        }
+        
+        //generate a diffrent sort of id cause it can cause errors cause two people can have the same id
 
         //listen for the updates for other players from server
-        this.socket.onmessage = (event) => {
+        this.messageListener = (event: { data: string; }) => {
             const parsedData = JSON.parse(event.data);
+            console.log(parsedData);
             if(parsedData.type === 'init'){
-                this.socket.send(JSON.stringify({
-                    type:"init",
-                    payload:{
-                        id:this._id,
-                        x:this.player.x,
-                        y:this.player.y
-                    }
-                }))
                 //initializing other players
                 parsedData.players.forEach((playerData:{id:string,x:number,y:number}) => {
                    if(playerData.id !== this._id && playerData.x && playerData.y){
@@ -131,7 +147,7 @@ export default class WorldScene extends Phaser.Scene{
         this.time.addEvent({
             delay:1000,
             callback: () => {
-                if(this.socket.readyState === WebSocket.OPEN){
+                if(this.socket && this.socket.readyState === WebSocket.OPEN){
 
                     this.socket.send(JSON.stringify({
                         type:"updatePlayer",
@@ -139,6 +155,7 @@ export default class WorldScene extends Phaser.Scene{
                             id:this._id,
                             x:this.player.x,
                             y:this.player.y,
+                            room:this.room
                         }
                     }));
                 }
@@ -201,7 +218,7 @@ export default class WorldScene extends Phaser.Scene{
         this.cameras.main.startFollow(this.player);
     }
 
-    update(time: number, delta: number): void {
+    update(): void {
         
         this.player.body.setVelocity(0);
 
@@ -238,5 +255,11 @@ export default class WorldScene extends Phaser.Scene{
         //     const zoomFactor = camera.zoom - deltaY * 0.001; // Adjust zoom sensitivity
         //     camera.setZoom(Phaser.Math.Clamp(zoomFactor, 0.5, 2)); // Restrict zoom levels
         //   });
+    }
+
+    shutdown() {
+        if(this.socket){
+            this.socket.removeEventListener('message',this.messageListener);
+        }
     }
 }

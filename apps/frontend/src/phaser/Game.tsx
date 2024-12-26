@@ -7,11 +7,11 @@ import WorldScene from './scenes/WorldScene';
 
 
 
-const Game = ({socket,name}:{socket:WebSocket,name:string}) => {
+const Game = ({socket,name,room}:{socket:WebSocket,name:string,room:string}) => {
     const gameContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(()=>{
-        const data = {socket:socket,name:name}
+        const data = {socket:socket,name:name,room:room}
         //config object
         const config: Phaser.Types.Core.GameConfig = {
             type:Phaser.AUTO,
@@ -38,13 +38,14 @@ const Game = ({socket,name}:{socket:WebSocket,name:string}) => {
         return ()=>{
             game.destroy(true);
         }
-    },[])
+    },[socket,name,room])
   return (
     <div>
         <div ref={gameContainerRef} className='w-screen h-screen relative'>
         </div>
+        {/* move this chat component somewhere else it is causing problem to in using spacebar */}
         <div className='absolute bottom-0'>
-                <Chat name={name} socket={socket}/>
+                <Chat name={name} socket={socket} room={room}/>
         </div>
     </div>
   )
