@@ -23,6 +23,8 @@ wss.on('connection', (socket) => {
 
     //this will initialize a room containing all the sockets
 
+
+    //join message
     if(parsedData.type === "joinmessage"){
       const {room} = parsedData.payload;
       if(clientsMessage.has(room)){
@@ -35,7 +37,7 @@ wss.on('connection', (socket) => {
       }
     }
 
-
+    //join game
     if(parsedData.type === 'joingame'){
       const {id,x,y,room} = parsedData.payload;
 
@@ -93,6 +95,7 @@ wss.on('connection', (socket) => {
       })
     }
 
+    //message
     if(parsedData.type === "message"){
       const {sender,message,room} = parsedData.payload;
       const messageData = {
