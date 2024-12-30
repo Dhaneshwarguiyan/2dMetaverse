@@ -36,6 +36,7 @@ model Maps {
   id Int @id @default(autoincrement())
   name String @unique
   room String @unique
+  tileSet String //run prisma migrate dev --name && npx generate prisma client
   layers MapLayers[]
   assets MapAssets[]
 }

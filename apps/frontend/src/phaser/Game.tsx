@@ -1,12 +1,15 @@
 import { useEffect, useRef } from 'react'
 import Phaser from 'phaser';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 // import BootScene from './scenes/BootScene';
 import WorldScene from './scenes/WorldMap1';
 
 
 
-const Game = ({socket,name,room}:{socket:WebSocket,name:string,room:string}) => {
+const Game = ({socket,room}:{socket:WebSocket,room:string}) => {
+    const name = useSelector((state:RootState)=>state.user.info?.username);
     const gameContainerRef = useRef<HTMLDivElement>(null);
     useEffect(()=>{
         const gameObj = new WorldScene("gameObj");

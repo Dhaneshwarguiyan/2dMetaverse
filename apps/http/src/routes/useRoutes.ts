@@ -22,7 +22,7 @@ router.post("/login", async (req,res)=>{
         if(response){
             if(response.password === password){
                 const token = jwt.sign({id:response.id},JWT_SECRET as string);
-                res.status(200).send({token});
+                res.status(200).send({token,username:response.username});
                 return;
             }
         }

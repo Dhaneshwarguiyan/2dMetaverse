@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import Game  from '../phaser/Game';
 import Chat from '../component/Chat';
-
+import Button from "../component/ui/Button";
+import Add from "../icons/Add";
 // import { setWebSocket } from "../utils/socket";
 
 const Metaverse = () => {
@@ -27,6 +28,7 @@ const Metaverse = () => {
                 <input type="text" name="name" placeholder="Name" value={name} onChange={(e)=>{setName(e.target.value)}} className="px-3 py-4 rounded-lg"/>
                 <input type="text" name="room" placeholder="Room" value={room} onChange={(e)=>{setRoom(e.target.value)}} className="px-3 py-4 rounded-lg"/>
                 <button onClick={()=>{setGame(true); localStorage.setItem("game",'true')}} className="px-3 py-4 bg-blue-600 rounded-lg">Join</button>
+                <Button icon={<Add/>} text={"Create Space"} type="secondary"/>
             </div>
         }
         {

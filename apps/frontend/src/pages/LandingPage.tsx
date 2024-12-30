@@ -1,12 +1,9 @@
-import { useNavigate } from "react-router-dom"
+import Hero from "../component/Hero"
 
 const LandingPage = () => {
-  const navigate = useNavigate();
   return (
-    <div>
-      Landing page
-      <button onClick={()=>{navigate('/login')}}>Login</button>
-      <button onClick={()=>{navigate('/login/signup')}}>signup</button>
+    <div className="w-screen mx-auto overflow-hidden">
+      <Hero />
     </div>
   )
 }

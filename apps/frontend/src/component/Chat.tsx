@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react"
 import Text from "./Text";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 interface messageType {
   sender:string;
   message:string
 }
 
-const Chat = ({name,socket,room}:{name:string,socket:WebSocket,room:string}) => {
+const Chat = ({socket,room}:{socket:WebSocket,room:string}) => {
     const [text,setText] = useState<string>("");
     const [messages,setMessages] = useState<messageType[]>();
-
+    const name = useSelector((state:RootState)=> state.user.info?.username);
     const handleMessage = ()=>{
       if(socket.readyState === WebSocket.OPEN){
           const messageData = {
@@ -22,10 +24,12 @@ const Chat = ({name,socket,room}:{name:string,socket:WebSocket,room:string}) => 
           }
           socket.send(JSON.stringify(messageData))
       }
-      setMessages((prev)=>{
+      if(name){
+        setMessages((prev) =>{
           if(prev) return [...prev,{sender:name,message:text}]
           else return [{sender:name,message:text}]
       })
+      }
       setText("");
   }
 
