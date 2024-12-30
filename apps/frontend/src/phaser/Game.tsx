@@ -1,16 +1,15 @@
 import { useEffect, useRef } from 'react'
 import Phaser from 'phaser';
-import Chat from '../component/Chat';
 
 // import BootScene from './scenes/BootScene';
-import WorldScene from './scenes/WorldScene';
+import WorldScene from './scenes/WorldMap1';
 
 
 
 const Game = ({socket,name,room}:{socket:WebSocket,name:string,room:string}) => {
     const gameContainerRef = useRef<HTMLDivElement>(null);
-
     useEffect(()=>{
+        const gameObj = new WorldScene("gameObj");
         const data = {socket:socket,name:name,room:room}
         //config object
         const config: Phaser.Types.Core.GameConfig = {
@@ -28,13 +27,13 @@ const Game = ({socket,name,room}:{socket:WebSocket,name:string,room:string}) => 
                 autoCenter:Phaser.Scale.CENTER_BOTH,
             },
             scene: [
-                WorldScene
+                gameObj
             ],
             parent:gameContainerRef.current || undefined
         }
 
         const game = new Phaser.Game(config);
-        game.scene.start('WorldScene',data);
+        game.scene.start('gameObj',data);
         return ()=>{
             game.destroy(true);
         }
@@ -42,10 +41,6 @@ const Game = ({socket,name,room}:{socket:WebSocket,name:string,room:string}) => 
   return (
     <div>
         <div ref={gameContainerRef} className='w-screen h-screen relative'>
-        </div>
-        {/* move this chat component somewhere else it is causing problem to in using spacebar */}
-        <div className='absolute bottom-0'>
-                <Chat name={name} socket={socket} room={room}/>
         </div>
     </div>
   )

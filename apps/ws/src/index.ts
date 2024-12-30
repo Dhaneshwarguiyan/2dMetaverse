@@ -59,9 +59,16 @@ wss.on('connection', (socket) => {
       }
 
       //get only those players where the room id is same
-      const playersArray = Array.from(players.values()).filter((player)=>{
-        return player.room === room;
-      })
+      // const playersArray = Array.from(players.values()).filter((player)=>{
+      //   return player.room === room;
+      // })
+      let playersArray:WebSocket[] | undefined = [];
+      if(clientsMessage.has(room)){
+        const playerInRoom = clientsMessage.get(room);
+        playersArray = playerInRoom?.filter((players)=>{
+          return players && players !== socket;
+        })
+      }
       //initializing the current player details in the map
       socket.send(
         JSON.stringify(
@@ -117,6 +124,18 @@ wss.on('connection', (socket) => {
         })
       }else{
         console.log("no room exists");
+      }
+    }
+
+    //animation
+    if(parsedData.type === "updateAnimation"){
+      if(clientsMessage.has(parsedData.payload.room)){
+        const clientArray = clientsMessage.get(parsedData.payload.room);
+        clientArray?.forEach((clients)=>{
+          if(clients && clients.readyState === WebSocket.OPEN && clients !== socket){
+            clients.send(JSON.stringify(parsedData));
+          }
+        })
       }
     }
 

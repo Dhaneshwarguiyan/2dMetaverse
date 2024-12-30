@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 //routes/middleware imports
 import messageRoutes from './routes/messageRoutes';
@@ -12,11 +13,16 @@ const PORT = process.env.PORT;
 
 //middlewares
 app.use(express.json());
-app.use(authMiddleware);
+app.use(cors({
+    origin:'*',
+    credentials:true,
+    methods:['GET','POST','DELETE'],
+    allowedHeaders:['Authorization','Content-type']
+}))
 
 //routes
 app.use('/api/v1/users',userRoutes);
-app.use('/api/v1/messages',messageRoutes)
+app.use('/api/v1/messages',authMiddleware,messageRoutes)
 app.get('/test',(req,res)=>{
     res.send("Test route");
 })

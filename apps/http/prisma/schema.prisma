@@ -31,3 +31,27 @@ model Messages {
   userId Int
   user User @relation(fields: [userId],references: [id])
 }
+
+model Maps {
+  id Int @id @default(autoincrement())
+  name String @unique
+  room String @unique
+  layers MapLayers[]
+  assets MapAssets[]
+}
+
+model MapLayers {
+  id Int @id @default(autoincrement())
+  name String
+  depth Int
+  mapId Int
+  map Maps @relation(fields: [mapId],references: [id])
+}
+
+model MapAssets {
+  id Int @id @default(autoincrement())
+  path String @unique
+  name String @unique
+  mapId Int
+  map Maps @relation(fields: [mapId],references: [id])
+}

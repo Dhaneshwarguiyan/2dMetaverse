@@ -1,10 +1,16 @@
 import Phaser from "phaser";
-// import { getSocket } from "../../utils/socket";
+
+interface keyType {
+    up: Phaser.Input.Keyboard.Key, 
+    down: Phaser.Input.Keyboard.Key, 
+    left: Phaser.Input.Keyboard.Key, 
+    right: Phaser.Input.Keyboard.Key 
+}
 
 export default class WorldScene extends Phaser.Scene{
     socket!:WebSocket | null;
     player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
+    // cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
     otherPlayer!: Map<string, Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
     private _id!: string;
 
@@ -23,9 +29,10 @@ export default class WorldScene extends Phaser.Scene{
     name!: string;
     room!: string;
     messageListener!: (event: { data: string; }) => void;
+    cursors: keyType | undefined;
     
-    constructor(){
-        super({key:"WorldScene"});
+    constructor(scene:string){
+        super({key:scene});
         this.otherPlayer = new Map(); 
     }
 
@@ -51,6 +58,7 @@ export default class WorldScene extends Phaser.Scene{
     
     create(){
         // this.socket = new WebSocket('ws://localhost:8080');
+
         this.map = this.make.tilemap({key:'map'});
         this.tile1 = this.map.addTilesetImage('magecity','tile1');
         this.tile2 = this.map.addTilesetImage('container','tile2');
@@ -211,8 +219,22 @@ export default class WorldScene extends Phaser.Scene{
         if(this.obstacles) this.physics.add.collider(this.player,this.obstacles);
 
         //adding cursor keys for our spirits
-        this.cursors = this.input.keyboard?.createCursorKeys();
+        // this.cursors = this.input.keyboard?.createCursorKeys();
+        this.cursors = this.input.keyboard?.addKeys({
+            up: Phaser.Input.Keyboard.KeyCodes.UP,
+            down: Phaser.Input.Keyboard.KeyCodes.DOWN,
+            left: Phaser.Input.Keyboard.KeyCodes.LEFT,
+            right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
+        }) as keyType;
 
+
+
+        // this.input.keyboard.on('keydown', (event) => {
+        //     if (event.code === 'Space' && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
+        //         event.stopPropagation(); // Prevent Phaser from handling this event
+        //         return;
+        //     }
+        // });
         //camera controls
         this.cameras.main.setBounds(0,0,this.map.widthInPixels,this.map.heightInPixels);
         this.cameras.main.setZoom(2.5);

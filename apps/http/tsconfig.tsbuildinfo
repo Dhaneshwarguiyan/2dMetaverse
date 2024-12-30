@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/routes/useRoutes.ts"],"version":"5.7.2"}
+{"root":["./src/index.ts","./src/override.d.ts","./src/middlewares/authMiddleware.ts","./src/routes/messageRoutes.ts","./src/routes/useRoutes.ts"],"version":"5.7.2"}

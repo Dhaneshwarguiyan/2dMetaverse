@@ -8,21 +8,26 @@ import Metaverse from './pages/Metaverse'
 import { BrowserRouter,Route,Routes } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import Space from './pages/Space'
+import Navigate from './pages/Navigate'
 
 function App() {
   return (
-    <div className='w-screen h-screen overflow-hidden'>
+    <div className='w-screen h-screen overflow-scroll'>
       <BrowserRouter>
-      <Routes >
-      <Route index element={<LandingPage />}/>
-      <Route path='/login' element={<Loggedout/>}>
-        <Route index element={<LoginPage/>}/>
-        <Route path='/signup' element={<SignupPage/>}/>
+      <Routes>
+      <Route path='/' element={<Navigate/>}>
+          <Route index element={<LandingPage />}/>
+          <Route path='/login' element={<Loggedout/>}>
+            <Route index element={<LoginPage/>}/>
+            <Route path='/login/signup' element={<SignupPage/>}/>
       </Route>
+        </Route>
       <Route path='/home' element={<LoggedIn/>}>
-        <Route path='/dashboard' element={<Dashboard/>}/>
-        <Route path='/space' element={<Space/>}/>
-        <Route path='/metaverse' element={<Metaverse/>}/>
+        {/* maps can be selected here and user infos */}
+        <Route path='/home/dashboard' element={<Dashboard/>}/>
+        {/* you choose your avatar */}
+        <Route path='/home/space' element={<Space/>}/>
+        <Route index element={<Metaverse/>}/>
       </Route>      
       </Routes>
       </BrowserRouter>

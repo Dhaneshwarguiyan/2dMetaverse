@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react"
 import Game  from '../phaser/Game';
+import Chat from '../component/Chat';
+
 // import { setWebSocket } from "../utils/socket";
 
 const Metaverse = () => {
+    //here name will be replaced by the username of the user
     const [name,setName] = useState<string>("");
     const [room,setRoom] = useState<string>("");
     const [socket,setSocket] = useState<WebSocket>();
@@ -27,10 +30,19 @@ const Metaverse = () => {
             </div>
         }
         {
-        game && socket && <Game socket={socket} name={name} room={room}/>
+        game && socket &&         
+        <div>
+            <Game socket={socket} name={name} room={room}/> 
+            <div className='absolute bottom-0'>
+                <Chat name={name} socket={socket} room={room}/>
+            </div>
+        </div>
         }
     </div>
   )
 }
 
 export default Metaverse
+
+
+        {/* move this chat component somewhere else it is causing problem to in using spacebar */}
