@@ -8,7 +8,8 @@ interface messageType {
   message:string
 }
 
-const Chat = ({socket,room}:{socket:WebSocket,room:string}) => {
+const Chat = ({names,socket,room}:{names?:string,socket:WebSocket,room:string}) => {
+  console.log(names);
     const [text,setText] = useState<string>("");
     const [messages,setMessages] = useState<messageType[]>();
     const name = useSelector((state:RootState)=> state.user.info?.username);

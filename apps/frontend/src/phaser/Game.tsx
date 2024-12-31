@@ -8,7 +8,8 @@ import WorldScene from './scenes/WorldMap1';
 
 
 
-const Game = ({socket,room}:{socket:WebSocket,room:string}) => {
+const Game = ({names,socket,room}:{names?:string,socket:WebSocket,room:string}) => {
+    console.log(names);
     const name = useSelector((state:RootState)=>state.user.info?.username);
     const gameContainerRef = useRef<HTMLDivElement>(null);
     useEffect(()=>{

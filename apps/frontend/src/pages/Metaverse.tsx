@@ -1,19 +1,25 @@
 import { useEffect, useState } from "react"
 import Game  from '../phaser/Game';
 import Chat from '../component/Chat';
-import Button from "../component/ui/Button";
-import Add from "../icons/Add";
-// import { setWebSocket } from "../utils/socket";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../slices/userslice";
 
 const Metaverse = () => {
-    //here name will be replaced by the username of the user
-    const [name,setName] = useState<string>("");
-    const [room,setRoom] = useState<string>("");
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [socket,setSocket] = useState<WebSocket>();
-    const [game,setGame] = useState<boolean>(false);
 
 
     useEffect(()=>{
+        const token = localStorage.getItem('token');
+        const username = localStorage.getItem('username');
+        if(token === "" || !token){
+          navigate('/login');
+        }else{
+          dispatch(loginUser({token,username}))
+          navigate('/home');
+        }
         const wss = new WebSocket('ws://localhost:8080');
         wss.onopen = ()=>{
             console.log("socket is opened");
@@ -23,20 +29,12 @@ const Metaverse = () => {
 
   return (
       <div className='w-screen h-screen flex justify-center items-center relative bg-slate-700'>
-        {!game &&
-            <div className="flex flex-col gap-3">
-                <input type="text" name="name" placeholder="Name" value={name} onChange={(e)=>{setName(e.target.value)}} className="px-3 py-4 rounded-lg"/>
-                <input type="text" name="room" placeholder="Room" value={room} onChange={(e)=>{setRoom(e.target.value)}} className="px-3 py-4 rounded-lg"/>
-                <button onClick={()=>{setGame(true); localStorage.setItem("game",'true')}} className="px-3 py-4 bg-blue-600 rounded-lg">Join</button>
-                <Button icon={<Add/>} text={"Create Space"} type="secondary"/>
-            </div>
-        }
         {
-        game && socket &&         
+         socket &&         
         <div>
-            <Game socket={socket} name={name} room={room}/> 
+            <Game socket={socket} room={"aa"}/> 
             <div className='absolute bottom-0'>
-                <Chat name={name} socket={socket} room={room}/>
+                <Chat socket={socket} room={"aa"}/>
             </div>
         </div>
         }
@@ -47,4 +45,3 @@ const Metaverse = () => {
 export default Metaverse
 
 
-        {/* move this chat component somewhere else it is causing problem to in using spacebar */}

@@ -24,8 +24,8 @@ function App() {
         {/* you choose your avatar */}
         <Route path='/home/dashboard' element={<Dashboard/>}/>
           </Route>      
-      </Route>
-        <Route path='/home/metaverse' element={<Metaverse/>}/>
+        </Route>
+        <Route path='/meta' element={<Metaverse/>}/>
       </Routes>
       </BrowserRouter>
     </div>
