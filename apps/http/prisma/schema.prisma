@@ -13,6 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//rename rooms with spaces....
 model User {
   id Int @id @default(autoincrement())
   email String @unique
@@ -21,6 +22,7 @@ model User {
   firstName String
   lastName String?
   messages Messages[]
+  rooms Rooms[] //include recently visited rooms "recentlyVisited spaces"
 }
 
 model Messages {
@@ -46,6 +48,8 @@ model Rooms {
   room String @unique
   mapId Int
   map Maps @relation(fields: [mapId], references: [id])
+  userId Int
+  user User @relation(fields: [userId],references: [id])
 }
 
 model MapLayers {

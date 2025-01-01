@@ -55,13 +55,15 @@ router.post('/assets',async(req,res)=>{
 })
 
 //rooms
-router.post('/rooms',async(req,res)=>{
+router.post('/spaces',async(req,res)=>{
     try {
         const {room,mapId} = req.body;
+        const id = req.userId;
         const response = await prisma.rooms.create({
             data:{
                 room,
-                mapId
+                mapId,
+                userId:Number(id)
             }
         })
         res.send(response);
@@ -71,9 +73,25 @@ router.post('/rooms',async(req,res)=>{
     }
 })
 
-router.get('/room',async(req,res)=>{
+//get all spaces
+router.get('/spaces/all',async(req,res)=>{
     try {
-        const {room} = req.body;
+        const userId = req.userId;
+        const response = await prisma.rooms.findMany({
+            where:{
+                userId:Number(userId)
+            }
+        })
+        res.send(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({message:"Internal Server Error"});
+    }
+})
+
+router.get('/space/:spaceId',async(req,res)=>{
+    try {
+        const room = req.params.spaceId;
         const response1 = await prisma.rooms.findUnique({
             where:{
                 room:room

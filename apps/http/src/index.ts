@@ -24,7 +24,7 @@ app.use(cors({
 //routes
 app.use('/api/v1/users',userRoutes);
 app.use('/api/v1/messages',authMiddleware,messageRoutes);
-app.use('/api/v1/maps',mapRoutes);
+app.use('/api/v1/maps',authMiddleware,mapRoutes);
 app.get('/test',(req,res)=>{
     res.send("Test route");
 })

@@ -2,18 +2,16 @@ import { useEffect, useRef } from 'react'
 import Phaser from 'phaser';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-
-// import BootScene from './scenes/BootScene';
+import { mapType } from '../types/types';
 import WorldScene from './scenes/WorldMap1';
 
 
 
-const Game = ({names,socket,room}:{names?:string,socket:WebSocket,room:string}) => {
-    console.log(names);
+const Game = ({mapData,socket,room}:{mapData:mapType,socket:WebSocket,room:string}) => {
     const name = useSelector((state:RootState)=>state.user.info?.username);
     const gameContainerRef = useRef<HTMLDivElement>(null);
     useEffect(()=>{
-        const gameObj = new WorldScene("gameObj");
+        const gameObj = new WorldScene({scene:"gameObj",mapData:mapData});
         const data = {socket:socket,name:name,room:room}
         //config object
         const config: Phaser.Types.Core.GameConfig = {

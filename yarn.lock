@@ -2449,6 +2449,7 @@ http-proxy-agent@^7.0.0, http-proxy-agent@^7.0.1:
   dependencies:
     "@prisma/client" "6.1.0"
     "@types/express" "^5.0.0"
+    axios "^1.7.9"
     cors "^2.8.5"
     dotenv "^16.4.7"
     express "^4.21.2"
