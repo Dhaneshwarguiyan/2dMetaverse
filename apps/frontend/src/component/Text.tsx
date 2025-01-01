@@ -1,4 +1,4 @@
-import Profile from '../../public/profile.png';
+import Profile from '../assets/profile.png';
 
 const Text = ({text,sender}:{text:string,sender:string}) => {
   return (

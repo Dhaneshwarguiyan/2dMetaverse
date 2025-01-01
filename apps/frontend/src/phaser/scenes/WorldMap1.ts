@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { mapType } from "../../types/types";
 
 interface keyType {
     up: Phaser.Input.Keyboard.Key, 
@@ -18,12 +19,6 @@ interface spriteType {
     animations:animationType[]
 }
 
-interface tileAssetType {
-    key:string; //each key should be unique
-    path:string;
-    name:string; //the name should be same as the name in the file path
-}
-
 interface spriteSheetType {
     key:string,
     path:string,
@@ -33,29 +28,6 @@ interface spriteSheetType {
     }
 }
 
-//this is the data that will be passed to the constructor
-const imageAssets:tileAssetType[] = [{
-    key:"tile1", //this can be anything and dont need user intervention and unique
-    path:"assets/magecity.png", //path must be specified
-    name:"magecity" //this will probably figure out if user intervention is needed or not
-},
-{
-    key:"tile2",
-    path:"assets/container.png",
-    name:"container"
-},
-]
-
-const layersArray:{name:string,depth:number}[] = 
-    [{name:"floor",depth:0},
-    {name:"border",depth:0},
-    {name:"decoration1",depth:0},
-    {name:"decoration2",depth:0},
-    {name:"decoration3",depth:0},
-    {name:"foreground",depth:1},
-    {name:"obstacles",depth:1},
-    {name:"spawn",depth:0}
-];
 
 
 //spriteSheet
@@ -104,9 +76,11 @@ export default class WorldScene extends Phaser.Scene{
     messageListener!: (event: { data: string; }) => void;
     cursors: keyType | undefined;
     spawnArea: Phaser.Types.Tilemaps.TiledObject[] | undefined;
+    mapData:mapType
     
-    constructor(scene:string){
+    constructor({scene,mapData}:{scene:string,mapData:mapType}){
         super({key:scene});
+        this.mapData = mapData
         this.otherPlayer = new Map(); 
     }
 
@@ -118,13 +92,13 @@ export default class WorldScene extends Phaser.Scene{
     
     preload(){
         //assets such as tile image
-        imageAssets.forEach(asset => {
-            this.load.image(asset.key,asset.path);
+        this.mapData.assets.forEach(asset => {
+            this.load.image(asset.id.toString(),asset.path);
 
         })
 
         //load tileset
-        this.load.tilemapTiledJSON('map','assets/forest3.json');
+        this.load.tilemapTiledJSON('map',this.mapData.tileSet);
 
         //load character
         spriteSheetArray.forEach(sprite => {
@@ -165,8 +139,8 @@ export default class WorldScene extends Phaser.Scene{
         // const spawnPoints = this.map.findObject('spawn zone',(obj) => obj.name)
 
         //loading assetsl into the screen
-        imageAssets.forEach((assets) => {
-            const temp = this.map.addTilesetImage(assets.name,assets.key);
+        this.mapData.assets.forEach((assets) => {
+            const temp = this.map.addTilesetImage(assets.name,assets.id.toString());
             if(temp){
                 if(tiles) tiles.push(temp);
             }
@@ -174,7 +148,7 @@ export default class WorldScene extends Phaser.Scene{
 
         //creating layers
         if(tiles){
-            layersArray.forEach((layerObj) => {
+            this.mapData.layers.forEach((layerObj) => {
                 const layer = this.map.createLayer(layerObj.name,tiles,0,0);
                 layer?.setDepth(layerObj.depth);
                 if(layer){
@@ -186,7 +160,7 @@ export default class WorldScene extends Phaser.Scene{
         //adding player sprite
         this.player = this.physics.add.sprite(position.x,position.y,mySprite.key,mySprite.initialState);
         //setting depth of layers above sprite
-        layers[layers.length - 1].setDepth(1); //foreground should be the last layer in the array
+        // layers[layers.length - 1].setDepth(1); //foreground should be the last layer in the array
         //no need of this will remove later..... after fixing layer in tiled images
         layers[layers.length - 2].setDepth(1); //obstacles should
 

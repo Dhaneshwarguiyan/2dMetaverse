@@ -22,7 +22,7 @@ router.post("/login", async (req,res)=>{
         if(response){
             if(response.password === password){
                 const token = jwt.sign({id:response.id},JWT_SECRET as string);
-                res.status(200).send({token});
+                res.status(200).send({token,username:response.username});
                 return;
             }
         }
@@ -52,8 +52,10 @@ router.post('/signup', async (req,res)=>{
         if(error.code === 'P2002'){
             const target = error.meta?.target;
             //400 Bad Request: The request was not formatted correctly
-            res.status(400).send({message:`${target} already exists`})
+            res.status(400).send({message:`${target} already exists`});
+            return;
         }
+        res.status(500).send({message:"Internal Server Error"});
     }
 })
 

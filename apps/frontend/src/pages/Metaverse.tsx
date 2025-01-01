@@ -1,18 +1,45 @@
 import { useEffect, useState } from "react"
 import Game  from '../phaser/Game';
 import Chat from '../component/Chat';
-
-// import { setWebSocket } from "../utils/socket";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../slices/userslice";
+import {RootState} from '../store/store';
+import { mapType } from "../types/types";
+import axios from "axios";
 
 const Metaverse = () => {
-    //here name will be replaced by the username of the user
-    const [name,setName] = useState<string>("");
-    const [room,setRoom] = useState<string>("");
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const room = useSelector((state:RootState)=>state.map.room);
+    const token = useSelector((state:RootState)=>state.user.info?.token);
+    const [mapData,setMapData] = useState<mapType>();
     const [socket,setSocket] = useState<WebSocket>();
-    const [game,setGame] = useState<boolean>(false);
 
+    const getMapDetails = async()=>{
+      try {
+        const response = await axios.get(`http://localhost:8000/api/v1/maps/space/${room}`,
+        {
+          headers:{
+            "Authorization":`${token}`
+          }
+        })
+        console.log(response.data);
+        setMapData(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
     useEffect(()=>{
+        const token = localStorage.getItem('token');
+        const username = localStorage.getItem('username');
+        if(token === "" || !token){
+          navigate('/login');
+        }else{
+          dispatch(loginUser({token,username}))
+        }
+        getMapDetails();
         const wss = new WebSocket('ws://localhost:8080');
         wss.onopen = ()=>{
             console.log("socket is opened");
@@ -22,19 +49,12 @@ const Metaverse = () => {
 
   return (
       <div className='w-screen h-screen flex justify-center items-center relative bg-slate-700'>
-        {!game &&
-            <div className="flex flex-col gap-3">
-                <input type="text" name="name" placeholder="Name" value={name} onChange={(e)=>{setName(e.target.value)}} className="px-3 py-4 rounded-lg"/>
-                <input type="text" name="room" placeholder="Room" value={room} onChange={(e)=>{setRoom(e.target.value)}} className="px-3 py-4 rounded-lg"/>
-                <button onClick={()=>{setGame(true); localStorage.setItem("game",'true')}} className="px-3 py-4 bg-blue-600 rounded-lg">Join</button>
-            </div>
-        }
         {
-        game && socket &&         
+         socket && mapData &&    
         <div>
-            <Game socket={socket} name={name} room={room}/> 
+            <Game socket={socket} mapData={mapData} room={room}/> 
             <div className='absolute bottom-0'>
-                <Chat name={name} socket={socket} room={room}/>
+                <Chat socket={socket} room={room}/>
             </div>
         </div>
         }
@@ -45,4 +65,3 @@ const Metaverse = () => {
 export default Metaverse
 
 
-        {/* move this chat component somewhere else it is causing problem to in using spacebar */}

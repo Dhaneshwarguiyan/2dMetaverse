@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react"
 import Text from "./Text";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 interface messageType {
   sender:string;
   message:string
 }
 
-const Chat = ({name,socket,room}:{name:string,socket:WebSocket,room:string}) => {
+const Chat = ({socket,room}:{socket:WebSocket,room:string}) => {
     const [text,setText] = useState<string>("");
     const [messages,setMessages] = useState<messageType[]>();
-
+    const name = useSelector((state:RootState)=> state.user.info?.username);
     const handleMessage = ()=>{
       if(socket.readyState === WebSocket.OPEN){
           const messageData = {
@@ -22,10 +24,12 @@ const Chat = ({name,socket,room}:{name:string,socket:WebSocket,room:string}) => 
           }
           socket.send(JSON.stringify(messageData))
       }
-      setMessages((prev)=>{
+      if(name){
+        setMessages((prev) =>{
           if(prev) return [...prev,{sender:name,message:text}]
           else return [{sender:name,message:text}]
       })
+      }
       setText("");
   }
 
@@ -59,37 +63,6 @@ const Chat = ({name,socket,room}:{name:string,socket:WebSocket,room:string}) => 
       socket.removeEventListener("message",messageEvent);
     }
 },[socket])
-
-    // useEffect(() => {
-    //   console.log('Socket state:', socket.readyState); 
-    //   const handleMessage = (event: { data: string; }) => {
-    //       console.log("Inside the onmessage");
-  //         const parsedData = JSON.parse(event.data);
-  //         console.log("hello");
-  //         if (parsedData.type === "message") {
-  //             const { sender, message } = parsedData.payload;
-  //             if (sender && message) {
-  //                 setMessages((prev) => [...prev, { sender, message }]);
-  //             }
-  //         }
-  //     };
-  
-      
-  //         if(socket.readyState === WebSocket.OPEN){
-  //           console.log('Setting up message listener...');
-  //             socket.addEventListener("message",handleMessage);
-  //         }else{
-  //             console.log("socket is not ready");
-  //         }
-      
-  
-  //     // Cleanup function to prevent duplicate listeners
-  //     return () => {
-  //         if (socket) {
-  //             socket.removeEventListener('message',handleMessage);
-  //         }
-  //     };
-  // },[]);
 
 
   return (

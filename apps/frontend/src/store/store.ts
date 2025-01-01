@@ -1,8 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from '../slices/userslice';
+import userSlice from '../slices/userslice';
+import mapSlice from "../slices/mapSlice";
 
-export default configureStore({
+export const store = configureStore({
     reducer:{
-        user:userReducer
+        user:userSlice,
+        map:mapSlice
     }
 })
+
+export type RootState = ReturnType<typeof store.getState>
