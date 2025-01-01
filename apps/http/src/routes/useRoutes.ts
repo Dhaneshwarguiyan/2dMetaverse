@@ -52,8 +52,10 @@ router.post('/signup', async (req,res)=>{
         if(error.code === 'P2002'){
             const target = error.meta?.target;
             //400 Bad Request: The request was not formatted correctly
-            res.status(400).send({message:`${target} already exists`})
+            res.status(400).send({message:`${target} already exists`});
+            return;
         }
+        res.status(500).send({message:"Internal Server Error"});
     }
 })
 

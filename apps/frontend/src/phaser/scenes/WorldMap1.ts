@@ -19,7 +19,7 @@ interface spriteType {
 }
 
 interface tileAssetType {
-    key:string; //each key should be unique
+    id:string; //It should be converted to string but it will come as number
     path:string;
     name:string; //the name should be same as the name in the file path
 }
@@ -35,12 +35,12 @@ interface spriteSheetType {
 
 //this is the data that will be passed to the constructor
 const imageAssets:tileAssetType[] = [{
-    key:"tile1", //this can be anything and dont need user intervention and unique
+    id:"tile1", //this can be anything and dont need user intervention and unique
     path:"assets/magecity.png", //path must be specified
     name:"magecity" //this will probably figure out if user intervention is needed or not
 },
 {
-    key:"tile2",
+    id:"tile2",
     path:"assets/container.png",
     name:"container"
 },
@@ -119,7 +119,7 @@ export default class WorldScene extends Phaser.Scene{
     preload(){
         //assets such as tile image
         imageAssets.forEach(asset => {
-            this.load.image(asset.key,asset.path);
+            this.load.image(asset.id,asset.path);
 
         })
 
@@ -166,7 +166,7 @@ export default class WorldScene extends Phaser.Scene{
 
         //loading assetsl into the screen
         imageAssets.forEach((assets) => {
-            const temp = this.map.addTilesetImage(assets.name,assets.key);
+            const temp = this.map.addTilesetImage(assets.name,assets.id);
             if(temp){
                 if(tiles) tiles.push(temp);
             }

@@ -35,10 +35,17 @@ model Messages {
 model Maps {
   id Int @id @default(autoincrement())
   name String @unique
-  room String @unique
-  tileSet String //run prisma migrate dev --name && npx generate prisma client
+  tileSet String 
+  rooms Rooms[]
   layers MapLayers[]
   assets MapAssets[]
+}
+
+model Rooms {
+  id Int @id @default(autoincrement())
+  room String @unique
+  mapId Int
+  map Maps @relation(fields: [mapId], references: [id])
 }
 
 model MapLayers {
