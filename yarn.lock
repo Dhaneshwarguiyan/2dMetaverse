@@ -2172,7 +2172,9 @@ fresh@0.5.2:
   resolved "file:apps/frontend"
   dependencies:
     "@reduxjs/toolkit" "^2.5.0"
+    axios "^1.7.9"
     phaser "^3.87.0"
+    prettier "^3.4.2"
     react "^18.3.1"
     react-dom "^18.3.1"
     react-redux "^9.2.0"
@@ -2454,6 +2456,7 @@ http-proxy-agent@^7.0.0, http-proxy-agent@^7.0.1:
     dotenv "^16.4.7"
     express "^4.21.2"
     jsonwebtoken "^9.0.2"
+    prettier "^3.4.2"
     typescript "^5.7.2"
 
 https-proxy-agent@^7.0.6:
@@ -3619,7 +3622,7 @@ prelude-ls@^1.2.1:
   resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
-prettier@^3.2.5:
+prettier@^3.2.5, prettier@^3.4.2:
   version "3.4.2"
   resolved "https://registry.npmjs.org/prettier/-/prettier-3.4.2.tgz"
   integrity sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==

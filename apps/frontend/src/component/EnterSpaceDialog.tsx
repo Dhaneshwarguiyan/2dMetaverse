@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react"
-import Cancel from "../icons/Cancel"
-import Button from "./ui/Button"
+import { useEffect, useRef, useState } from "react";
+import Cancel from "../icons/Cancel";
+import Button from "./ui/Button";
 import { useDispatch } from "react-redux";
 import { closeEntryCodeDialog } from "../slices/toggleSlice";
 import axios from "axios";
@@ -9,62 +9,85 @@ import { initMap } from "../slices/mapSlice";
 
 //code validation to be added in here
 const EnterSpaceDialog = () => {
-    const dialogContainerRef = useRef<HTMLDivElement>(null);
-    const [roomCode,setRoomCode] = useState<string>("");
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const dialogContainerRef = useRef<HTMLDivElement>(null);
+  const [roomCode, setRoomCode] = useState<string>("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-
-    const getSpace = async()=>{
-      try {
-        const response = await axios.get(`http://localhost:8000/api/v1/maps/space/get/${roomCode}`,{
-          headers:{
-            "Authorization":`${localStorage.getItem('token')}`
-          }
-        })
-        if(response.data.message){
-          dispatch(initMap(roomCode));
-          navigate('/meta');
-        }else{
-          console.log("No room exists");
-        }
-      } catch (error) {
-        console.log(error)
+  const getSpace = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/maps/space/get/${roomCode}`,
+        {
+          headers: {
+            Authorization: `${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      if (response.data.message) {
+        dispatch(initMap(roomCode));
+        navigate("/meta");
+      } else {
+        console.log("No room exists");
       }
+    } catch (error) {
+      console.log(error);
     }
-  
-    const closeDialog = ()=>{
-        dispatch(closeEntryCodeDialog());
-    }
+  };
 
-    const closeOnOutsideClickDialog = (e:MouseEvent)=>{
-        if(!(e.target instanceof Node && dialogContainerRef.current && dialogContainerRef.current.contains(e.target))){
-            closeDialog();
-        }
-    }
+  const closeDialog = () => {
+    dispatch(closeEntryCodeDialog());
+  };
 
-    useEffect(()=>{
-        window.addEventListener('mousedown',closeOnOutsideClickDialog);
-        return ()=>{
-            window.removeEventListener('mousedown',closeOnOutsideClickDialog);
-        }
-    },[])
+  const closeOnOutsideClickDialog = (e: MouseEvent) => {
+    if (
+      !(
+        e.target instanceof Node &&
+        dialogContainerRef.current &&
+        dialogContainerRef.current.contains(e.target)
+      )
+    ) {
+      closeDialog();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousedown", closeOnOutsideClickDialog);
+    return () => {
+      window.removeEventListener("mousedown", closeOnOutsideClickDialog);
+    };
+  }, []);
 
   return (
-    <div className="w-screen h-screen absolute flex justify-center items-center backdrop-blur-sm z-20" >
-    <div className="w-[350px] border p-4 rounded-lg shadow-lg" ref={dialogContainerRef}>
-    <div className="flex justify-between items-center mb-3">
-        <span className="font-extrabold text-lg">Enter with Code</span>
-        <span onClick={closeDialog} className="cursor-pointer"><Cancel /></span>
+    <div className="w-screen h-screen absolute flex justify-center items-center backdrop-blur-sm z-20">
+      <div
+        className="w-[350px] border p-4 rounded-lg shadow-lg"
+        ref={dialogContainerRef}
+      >
+        <div className="flex justify-between items-center mb-3">
+          <span className="font-extrabold text-lg">Enter with Code</span>
+          <span onClick={closeDialog} className="cursor-pointer">
+            <Cancel />
+          </span>
         </div>
         <div className="flex flex-col gap-2 items-center">
-        <div className="font-thin text-gray-700 w-full">Entry Code</div>
-        <input type="text" placeholder="Your Entry Code" value={roomCode} onChange={(e)=>{setRoomCode(e.target.value)}} className="border outline-none p-2 rounded-lg w-full"/>
-        <span onClick={getSpace}><Button text="Enter" type="primary"/></span>
+          <div className="font-thin text-gray-700 w-full">Entry Code</div>
+          <input
+            type="text"
+            placeholder="Your Entry Code"
+            value={roomCode}
+            onChange={(e) => {
+              setRoomCode(e.target.value);
+            }}
+            className="border outline-none p-2 rounded-lg w-full"
+          />
+          <span onClick={getSpace}>
+            <Button text="Enter" type="primary" />
+          </span>
+        </div>
       </div>
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default EnterSpaceDialog
+export default EnterSpaceDialog;
