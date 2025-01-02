@@ -16,6 +16,6 @@ export interface mapType {
     id:number;
     name:string;
     tileSet:string;
-    layers:layersType[];
-    assets:assetsType[];
+    layers?:layersType[];
+    assets?:assetsType[];
 }

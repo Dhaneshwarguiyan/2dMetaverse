@@ -92,7 +92,7 @@ export default class WorldScene extends Phaser.Scene{
     
     preload(){
         //assets such as tile image
-        this.mapData.assets.forEach(asset => {
+        this.mapData.assets?.forEach(asset => {
             this.load.image(asset.id.toString(),asset.path);
 
         })
@@ -121,10 +121,10 @@ export default class WorldScene extends Phaser.Scene{
        }
        return {x:300,y:400};
     }
-    generateId = () => {
+    generateId = (len:number) => {
         const random = "abcdefghijklmnopqrstuvwxyz1234567890";
         let answer = "";
-        for(let i = 0;i<8;i++){
+        for(let i = 0;i<len;i++){
             answer = answer + random[Math.floor(Math.random()*36)];
         }
         return answer;
@@ -139,7 +139,7 @@ export default class WorldScene extends Phaser.Scene{
         // const spawnPoints = this.map.findObject('spawn zone',(obj) => obj.name)
 
         //loading assetsl into the screen
-        this.mapData.assets.forEach((assets) => {
+        this.mapData.assets?.forEach((assets) => {
             const temp = this.map.addTilesetImage(assets.name,assets.id.toString());
             if(temp){
                 if(tiles) tiles.push(temp);
@@ -148,7 +148,7 @@ export default class WorldScene extends Phaser.Scene{
 
         //creating layers
         if(tiles){
-            this.mapData.layers.forEach((layerObj) => {
+            this.mapData.layers?.forEach((layerObj) => {
                 const layer = this.map.createLayer(layerObj.name,tiles,0,0);
                 layer?.setDepth(layerObj.depth);
                 if(layer){
@@ -176,7 +176,7 @@ export default class WorldScene extends Phaser.Scene{
 
         
 
-        this._id = this.generateId();
+        this._id = this.generateId(8);
 
         if(this.socket && this.socket.readyState === WebSocket.OPEN){
             this.socket.send(JSON.stringify({

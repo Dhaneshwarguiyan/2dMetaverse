@@ -4,7 +4,8 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.post('/',async (req,res) => {
+//create maps
+router.post('/create',async (req,res) => {
     try {
         const {name,tileSet} = req.body;
         const response = await prisma.maps.create({
@@ -24,7 +25,7 @@ router.post('/',async (req,res) => {
     }
 })
 
-//Layers
+//create Layers
 router.post('/layers',async(req,res)=>{
     try {
         const {layers} = req.body; //layers will contain the id of the map also
@@ -39,7 +40,7 @@ router.post('/layers',async(req,res)=>{
     }
 })
 
-//assets
+//create assets
 router.post('/assets',async(req,res)=>{
     try {
         const {assets} = req.body; //assets will contain the id of the map in mapId
@@ -54,10 +55,12 @@ router.post('/assets',async(req,res)=>{
     }
 })
 
-//rooms
+//create new spaces
 router.post('/spaces',async(req,res)=>{
+    console.log("here")
     try {
         const {room,mapId} = req.body;
+        console.log(room,mapId);
         const id = req.userId;
         const response = await prisma.rooms.create({
             data:{
@@ -73,7 +76,7 @@ router.post('/spaces',async(req,res)=>{
     }
 })
 
-//get all spaces
+//get all user spaces
 router.get('/spaces/all',async(req,res)=>{
     try {
         const userId = req.userId;
@@ -89,6 +92,26 @@ router.get('/spaces/all',async(req,res)=>{
     }
 })
 
+//check if the space is present or not
+router.get('/space/get/:spaceId',async(req,res)=>{
+    try {
+        const room = req.params.spaceId;
+        const response = await prisma.rooms.findUnique({
+            where:{
+                room:room
+            },
+        })
+        if(response){
+            res.send({message:true});
+            return;
+        }
+        res.send({message:false});
+    } catch (error) {
+        res.status(500).send({message:"Internal Server Error"});
+    }
+})
+
+//to get the map based on the room
 router.get('/space/:spaceId',async(req,res)=>{
     try {
         const room = req.params.spaceId;
@@ -121,15 +144,9 @@ router.get('/space/:spaceId',async(req,res)=>{
 })
 
 //Not yet implemented completely
-router.get('/',async (req,res)=>{
+router.get('/all',async (req,res)=>{
     try {
-        const response = await prisma.maps.findMany({
-            include:{
-                rooms:true,
-                layers:true,
-                assets:true
-            }
-        });
+        const response = await prisma.maps.findMany({});
         res.status(200).send(response);
     } catch (error) {
         res.send({message:"Internal Server Error"});
