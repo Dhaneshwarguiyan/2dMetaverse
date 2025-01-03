@@ -57,10 +57,8 @@ router.post("/assets", async (req, res) => {
 
 //create new spaces
 router.post("/spaces", async (req, res) => {
-  console.log("here");
   try {
     const { room, mapId } = req.body;
-    console.log(room, mapId);
     const id = req.userId;
     const response = await prisma.rooms.create({
       data: {
@@ -75,6 +73,24 @@ router.post("/spaces", async (req, res) => {
     res.status(500).send({ message: "Internal Server Error" });
   }
 });
+
+//delete owner space
+//edge cases not handled....
+router.post('/delete', async(req,res)=>{
+    try {
+      const { room } = req.body;
+      const id = req.userId;
+      const response  = await prisma.rooms.delete({
+        where:{
+          room,
+          userId:Number(id)
+        }
+      })
+      res.send(response);
+    } catch (error) {
+      console.log(error);
+    }
+})
 
 //get all user spaces
 router.get("/spaces/all", async (req, res) => {

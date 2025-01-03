@@ -7,6 +7,8 @@ interface player {
   x: number;
   y: number;
   room: string;
+  initialState: number;
+  key: string;
 }
 
 const players = new Map<number, player>();
@@ -37,28 +39,15 @@ wss.on("connection", (socket) => {
 
     //join game
     if (parsedData.type === "joingame") {
-      const { id, x, y, room } = parsedData.payload;
-
-      //logic to store the socket w.r.t room
-      // if(clientsMessage.has(room)){
-      //   const clientArray = clientsMessage.get(room);
-      //   if(clientArray && !clientArray?.includes(socket)){
-      //     clientsMessage.set(room,[...clientArray,socket])
-      //   }
-      // }else{
-      //   clientsMessage.set(room,[socket]);
-      // }
+      const { id, x, y, room, initialState ,key} = parsedData.payload;
 
       myId = id;
 
-      if (id && x && y) {
-        players.set(id, { id, x, y, room });
+      if (id && x && y && initialState && key) {
+        players.set(id, { id, x, y, room, initialState,key});
       }
 
       //get only those players where the room id is same
-      // const playersArray = Array.from(players.values()).filter((player)=>{
-      //   return player.room === room;
-      // })
       let playersArray: WebSocket[] | undefined = [];
       if (clientsMessage.has(room)) {
         const playerInRoom = clientsMessage.get(room);
@@ -77,8 +66,8 @@ wss.on("connection", (socket) => {
 
     //for updating the player location
     if (parsedData.type === "updatePlayer") {
-      const { id, x, y, room } = parsedData.payload;
-      players.set(id, { id, x, y, room });
+      const { id, x, y, room, initialState, key } = parsedData.payload;
+      players.set(id, { id, x, y, room, initialState,key });
 
       //broadcast the updated position to all other clients
       const messageData = {
@@ -87,6 +76,8 @@ wss.on("connection", (socket) => {
           id,
           x,
           y,
+          initialState,
+          key
         },
       };
       const playerArray = clientsMessage.get(room);

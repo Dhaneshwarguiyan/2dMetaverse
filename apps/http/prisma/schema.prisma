@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -66,4 +60,34 @@ model MapAssets {
   name String @unique
   mapId Int
   map Maps @relation(fields: [mapId],references: [id])
+}
+model SpriteAssets {
+  key Int @id @default(autoincrement())
+  path String
+  frameWidth Int
+  frameHeight Int
+  sprites Sprites[]
+}
+
+model Sprites {
+  id Int @id @default(autoincrement())
+  initialState Int
+  animations SpriteAnimations[]
+  key Int
+  keyRelation SpriteAssets @relation(fields: [key],references: [key])
+}
+
+enum AnimationKeys {
+  left
+  right
+  up
+  down
+}
+
+model SpriteAnimations {
+  id Int @id @default(autoincrement())
+  key AnimationKeys
+  frames Int[]
+  spriteId Int
+  sprite Sprites @relation(fields: [spriteId], references: [id])
 }

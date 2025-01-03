@@ -19,3 +19,30 @@ export interface mapType {
   layers?: layersType[];
   assets?: assetsType[];
 }
+export interface spriteAssetsType {
+  key: number;
+  path: string;
+  frameWidth: number;
+  frameHeight: number;
+}
+
+enum animationKeys {
+  left,
+  right,
+  up,
+  down,
+}
+
+export interface animationsType {
+  id: number;
+  key: animationKeys;
+  frames: number[];
+  spriteId: number;
+}
+
+export interface spriteType {
+  id: number;
+  key: number;
+  initialState: number;
+  animations: animationsType[];
+}

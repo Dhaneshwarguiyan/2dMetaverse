@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   entryCodeDialog: false,
   createSpaceDialog: false,
+  optionsDialog: false,
 };
 
 const toggleSlice = createSlice({
@@ -15,17 +16,17 @@ const toggleSlice = createSlice({
     closeEntryCodeDialog: (state) => {
       state.entryCodeDialog = false;
     },
-    toggleEntryCodeDialog: (state) => {
-      state.entryCodeDialog = !state.entryCodeDialog;
-    },
     openCreateSpaceDialog: (state) => {
       state.createSpaceDialog = true;
     },
     closeCreateSpaceDialog: (state) => {
       state.createSpaceDialog = false;
     },
-    toggleCreateSpaceDialog: (state) => {
-      state.createSpaceDialog = !state.createSpaceDialog;
+    toggleOptionsDialog: (state) => {
+      state.optionsDialog = !state.optionsDialog;
+    },
+    closeOptionsDialog: (state) => {
+      state.optionsDialog = false;
     },
   },
 });
@@ -33,7 +34,6 @@ const toggleSlice = createSlice({
 export const {
   openEntryCodeDialog,
   closeEntryCodeDialog,
-  toggleEntryCodeDialog,
   openCreateSpaceDialog,
   closeCreateSpaceDialog,
 } = toggleSlice.actions;

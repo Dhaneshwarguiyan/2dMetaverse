@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "npm run prettier && vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "prettier":"npx prettier . --write",
+    "prettier": "npx prettier . --write",
     "preview": "vite preview"
   },
   "dependencies": {

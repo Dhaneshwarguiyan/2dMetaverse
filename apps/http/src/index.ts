@@ -6,6 +6,7 @@ import cors from "cors";
 import messageRoutes from "./routes/messageRoutes";
 import userRoutes from "./routes/useRoutes";
 import mapRoutes from "./routes/mapRoutes";
+import spriteRoutes from './routes/spriteRoutes';
 import authMiddleware from "./middlewares/authMiddleware";
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.use(
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/messages", authMiddleware, messageRoutes);
 app.use("/api/v1/maps", authMiddleware, mapRoutes);
+app.use("/api/v1/sprites", authMiddleware, spriteRoutes);
 app.get("/test", (req, res) => {
   res.send("Test route");
 });

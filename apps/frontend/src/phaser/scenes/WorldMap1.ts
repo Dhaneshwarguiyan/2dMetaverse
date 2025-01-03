@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import { mapType } from "../../types/types";
+import { spriteType } from "../../types/types";
+import { spriteAssetsType } from "../../types/types";
 
 interface keyType {
   up: Phaser.Input.Keyboard.Key;
@@ -8,61 +10,122 @@ interface keyType {
   right: Phaser.Input.Keyboard.Key;
 }
 
-interface animationType {
-  key: string;
-  frames: number[];
-}
+// interface animationType {
+//   key: string;
+//   frames: number[];
+// }
 
-interface spriteType {
-  key: string;
-  initialState: number;
-  animations: animationType[];
-}
+// interface spriteType {
+//   key: string;
+//   initialState: number;
+//   animations: animationType[];
+// }
 
-interface spriteSheetType {
-  key: string;
-  path: string;
-  dimensions: {
-    frameWidth: number;
-    frameHeight: number;
-  };
-}
+// interface spriteSheetType {
+//   key: string;
+//   path: string;
+//   frameWidth: number;
+//   frameHeight: number;
+// }
 
 //spriteSheet
-const spriteSheetArray: spriteSheetType[] = [
-  {
-    key: "player",
-    path: "assets/sprite.png",
-    dimensions: {
-      frameWidth: 16,
-      frameHeight: 16,
-    },
-  },
-];
+// const spriteSheetArray: spriteSheetType[] = [
+//   {
+//     key: "player",
+//     path: "assets/sprite.png",
+//     frameWidth: 16,
+//     frameHeight: 16,
+//   },
+// ];
 //sprite
-const mySprite: spriteType = {
-  key: "player", //same as the sprite sheet key/reference to sprite sheet
-  initialState: 6,
-  animations: [
-    {
-      key: "right",
-      frames: [1, 7, 1, 13],
-    },
-    {
-      key: "left",
-      frames: [1, 7, 1, 13],
-    },
-    {
-      key: "up",
-      frames: [2, 8, 2, 14],
-    },
-    {
-      key: "down",
-      frames: [0, 6, 0, 12],
-    },
-  ],
-};
-
+// const mySprite = {
+//   key: "player", //same as the sprite sheet key/reference to sprite sheet
+//   initialState: 6,
+//   animations: [
+//     {
+//       key: "right",
+//       frames: [1, 7, 1, 13],
+//     },
+//     {
+//       key: "left",
+//       frames: [1, 7, 1, 13],
+//     },
+//     {
+//       key: "up",
+//       frames: [2, 8, 2, 14],
+//     },
+//     {
+//       key: "down",
+//       frames: [0, 6, 0, 12],
+//     },
+//   ],
+// };
+// const mySprite2 = {
+//   key: "player", //same as the sprite sheet key/reference to sprite sheet
+//   initialState: 3,
+//   animations: [
+//     {
+//       key: "right",
+//       frames: [4, 10, 4, 16],
+//     },
+//     {
+//       key: "left",
+//       frames: [4, 10, 4, 16],
+//     },
+//     {
+//       key: "up",
+//       frames: [5, 11, 5, 17],
+//     },
+//     {
+//       key: "down",
+//       frames: [3, 9, 3, 15],
+//     },
+//   ],
+// };
+// const mySprite11 = {
+//   key: "player", //same as the sprite sheet key/reference to sprite sheet
+//   initialState: 21,
+//   animations: [
+//     {
+//       key: "right",
+//       frames: [22, 28, 22, 34],
+//     },
+//     {
+//       key: "left",
+//       frames: [22, 28, 22, 34],
+//     },
+//     {
+//       key: "up",
+//       frames: [23, 29, 23, 35],
+//     },
+//     {
+//       key: "down",
+//       frames: [21, 27, 21, 33],
+//     },
+//   ],
+// };
+// const mySprite1 = {
+//   key: "player", //same as the sprite sheet key/reference to sprite sheet
+//   initialState: 18,
+//   animations: [
+//     {
+//       key: "right",
+//       frames: [19, 25, 19, 31],
+//     },
+//     {
+//       key: "left",
+//       frames: [19, 25, 19, 31],
+//     },
+//     {
+//       key: "up",
+//       frames: [20, 26, 20, 32],
+//     },
+//     {
+//       key: "down",
+//       frames: [18, 24, 18, 30],
+//     },
+//   ],
+// };
 export default class WorldScene extends Phaser.Scene {
   socket!: WebSocket | null;
   player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -75,10 +138,24 @@ export default class WorldScene extends Phaser.Scene {
   cursors: keyType | undefined;
   spawnArea: Phaser.Types.Tilemaps.TiledObject[] | undefined;
   mapData: mapType;
+  spriteAssets: spriteAssetsType[];
+  sprites: spriteType[];
 
-  constructor({ scene, mapData }: { scene: string; mapData: mapType }) {
+  constructor({
+    scene,
+    mapData,
+    spritesAssets,
+    sprites,
+  }: {
+    scene: string;
+    mapData: mapType;
+    spritesAssets: spriteAssetsType[];
+    sprites: spriteType[];
+  }) {
     super({ key: scene });
     this.mapData = mapData;
+    this.spriteAssets = spritesAssets;
+    this.sprites = sprites;
     this.otherPlayer = new Map();
   }
 
@@ -98,13 +175,12 @@ export default class WorldScene extends Phaser.Scene {
     this.load.tilemapTiledJSON("map", this.mapData.tileSet);
 
     //load character
-    spriteSheetArray.forEach((sprite) => {
-      this.load.spritesheet(sprite.key, sprite.path, sprite.dimensions);
+    this.spriteAssets.forEach((sprite) => {
+      this.load.spritesheet(sprite.key.toString(), sprite.path, {
+        frameWidth: sprite.frameWidth,
+        frameHeight: sprite.frameHeight,
+      });
     });
-    // this.load.spritesheet('player',"assets/sprite.png",{
-    //     frameWidth:16,
-    //     frameHeight:16
-    // });
   }
   generateRandomPosition() {
     if (this.spawnArea) {
@@ -137,6 +213,7 @@ export default class WorldScene extends Phaser.Scene {
     this.map = this.make.tilemap({ key: "map" });
     const tiles: Phaser.Tilemaps.Tileset[] = [];
     const layers: Phaser.Tilemaps.TilemapLayer[] = [];
+    const mySprite = this.sprites[0];
     this.spawnArea = this.map.getObjectLayer("spawn")?.objects;
     // const spawnPoints = this.map.findObject('spawn zone',(obj) => obj.name)
 
@@ -163,13 +240,28 @@ export default class WorldScene extends Phaser.Scene {
     this.player = this.physics.add.sprite(
       position.x,
       position.y,
-      mySprite.key,
+      mySprite.key.toString(),
       mySprite.initialState,
     );
+    // const newPlayer = this.physics.add.sprite(
+    //   position.x,
+    //   position.y,
+    //   mySprite.key.toString(),
+    //   mySprite.initialState,
+    // );
+    this.anims.create({
+      key: "walk",
+      frames: this.anims.generateFrameNumbers(mySprite.key.toString(), {
+        frames: [1, 7, 1, 13],
+      }),
+      frameRate: 8,
+      repeat: -1,
+    });
+
     //setting depth of layers above sprite
-    // layers[layers.length - 1].setDepth(1); //foreground should be the last layer in the array
+    // layers[layers.length - 1].setDepth(1); //spawn should be the last layer in the array
     //no need of this will remove later..... after fixing layer in tiled images
-    layers[layers.length - 2].setDepth(1); //obstacles should
+    layers[layers.length - 2].setDepth(1); //foreground should
 
     //setting collision of the sprite with obstacles
     const obstacles = layers[layers.length - 1];
@@ -189,6 +281,8 @@ export default class WorldScene extends Phaser.Scene {
             id: this._id,
             x: this.player.x,
             y: this.player.y,
+            initialState: mySprite.initialState,
+            key: mySprite.key.toString(),
             room: this.room,
           },
         }),
@@ -202,13 +296,19 @@ export default class WorldScene extends Phaser.Scene {
       if (parsedData.type === "init") {
         //initializing other players
         parsedData.players.forEach(
-          (playerData: { id: string; x: number; y: number }) => {
+          (playerData: {
+            id: string;
+            x: number;
+            y: number;
+            initialState: number;
+            key: string;
+          }) => {
             if (playerData.id !== this._id && playerData.x && playerData.y) {
               const otherPlayer = this.physics.add.sprite(
                 playerData.x,
                 playerData.y,
-                "player",
-                6,
+                playerData.key,
+                playerData.initialState,
               );
               otherPlayer.displayWidth = 27;
               otherPlayer.scaleY = otherPlayer.scaleX;
@@ -218,11 +318,11 @@ export default class WorldScene extends Phaser.Scene {
         );
       } else if (parsedData.type === "updatePlayer") {
         console.log(parsedData.payload);
-        const { id, x, y } = parsedData.payload;
+        const { id, x, y, initialState, key } = parsedData.payload;
         //check if the player being updated is present in the map or not
         if (!this.otherPlayer.has(id)) {
           //create a new player if not already in the map
-          const otherPlayer = this.physics.add.sprite(x, y, "player", 6);
+          const otherPlayer = this.physics.add.sprite(x, y, key, initialState);
           otherPlayer.displayWidth = 27;
           otherPlayer.scaleY = otherPlayer.scaleX;
           this.otherPlayer.set(id, otherPlayer);
@@ -241,7 +341,6 @@ export default class WorldScene extends Phaser.Scene {
         }
       } else if (parsedData.type === "updateAnimation") {
         const { key, id } = parsedData.payload;
-        console.log(parsedData.payload);
         const otherPlayer = this.otherPlayer.get(id);
         if (otherPlayer) {
           if (key !== "stop") {
@@ -271,6 +370,8 @@ export default class WorldScene extends Phaser.Scene {
                 id: this._id,
                 x: this.player.x,
                 y: this.player.y,
+                initialState: mySprite.initialState,
+                key: mySprite.key.toString(),
                 room: this.room,
               },
             }),
@@ -283,8 +384,8 @@ export default class WorldScene extends Phaser.Scene {
     //spirite animations
     mySprite.animations.forEach((animations) => {
       this.anims.create({
-        key: animations.key,
-        frames: this.anims.generateFrameNumbers(mySprite.key, {
+        key: animations.key.toString(),
+        frames: this.anims.generateFrameNumbers(mySprite.key.toString(), {
           frames: animations.frames,
         }),
         frameRate: 10,
@@ -403,36 +504,3 @@ export default class WorldScene extends Phaser.Scene {
     }
   }
 }
-
-// this.anims.create({
-//     key:'right',
-//     frames: this.anims.generateFrameNumbers('player',{
-//         frames: [1,7,1,13]
-//     }),
-//     frameRate: 10,
-//     repeat: -1
-// })
-// this.anims.create({
-//     key:"left",
-//     frames:this.anims.generateFrameNumbers("player",{
-//         frames:[1,7,1,13],
-//     }),
-//     frameRate:10,
-//     repeat:-1,
-// })
-// this.anims.create({
-//     key:'up',
-//     frames:this.anims.generateFrameNumbers('player',{
-//         frames:[2,8,2,14],
-//     }),
-//     frameRate:10,
-//     repeat:-1,
-// })
-// this.anims.create({
-//     key:"down",
-//     frames:this.anims.generateFrameNumbers("player",{
-//         frames:[0,6,0,12]
-//     }),
-//     frameRate:10,
-//     repeat:-1
-// })
