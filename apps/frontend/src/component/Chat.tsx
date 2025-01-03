@@ -12,6 +12,7 @@ const Chat = ({ socket, room }: { socket: WebSocket; room: string }) => {
   const [text, setText] = useState<string>("");
   const [messages, setMessages] = useState<messageType[]>();
   const name = useSelector((state: RootState) => state.user.info?.username);
+
   const handleMessage = () => {
     if (socket.readyState === WebSocket.OPEN) {
       const messageData = {

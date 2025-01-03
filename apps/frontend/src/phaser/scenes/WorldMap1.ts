@@ -140,6 +140,7 @@ export default class WorldScene extends Phaser.Scene {
   mapData: mapType;
   spriteAssets: spriteAssetsType[];
   sprites: spriteType[];
+  mySpriteId!: number;
 
   constructor({
     scene,
@@ -213,7 +214,8 @@ export default class WorldScene extends Phaser.Scene {
     this.map = this.make.tilemap({ key: "map" });
     const tiles: Phaser.Tilemaps.Tileset[] = [];
     const layers: Phaser.Tilemaps.TilemapLayer[] = [];
-    const mySprite = this.sprites[0];
+    this.mySpriteId = Math.floor(Math.random()*4);
+    const mySprite = this.sprites[this.mySpriteId];
     this.spawnArea = this.map.getObjectLayer("spawn")?.objects;
     // const spawnPoints = this.map.findObject('spawn zone',(obj) => obj.name)
 
@@ -243,20 +245,6 @@ export default class WorldScene extends Phaser.Scene {
       mySprite.key.toString(),
       mySprite.initialState,
     );
-    // const newPlayer = this.physics.add.sprite(
-    //   position.x,
-    //   position.y,
-    //   mySprite.key.toString(),
-    //   mySprite.initialState,
-    // );
-    this.anims.create({
-      key: "walk",
-      frames: this.anims.generateFrameNumbers(mySprite.key.toString(), {
-        frames: [1, 7, 1, 13],
-      }),
-      frameRate: 8,
-      repeat: -1,
-    });
 
     //setting depth of layers above sprite
     // layers[layers.length - 1].setDepth(1); //spawn should be the last layer in the array
@@ -272,6 +260,20 @@ export default class WorldScene extends Phaser.Scene {
     this.player.scaleY = this.player.scaleX;
 
     this._id = this.generateId(8);
+
+    //spirite animations
+        this.sprites.map((sprite) => {
+          sprite.animations.map((animations)=>{
+              this.anims.create({
+                key: `${animations.key}-${animations.spriteId}`,
+                frames: this.anims.generateFrameNumbers(mySprite.key.toString(), {
+                  frames: animations.frames,
+                }),
+                frameRate: 10,
+                repeat: -1,
+              });
+          })
+      })
 
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(
@@ -289,7 +291,6 @@ export default class WorldScene extends Phaser.Scene {
       );
       console.log("client connected to server");
     }
-
     //listen for the updates for other players from server
     this.messageListener = (event: { data: string }) => {
       const parsedData = JSON.parse(event.data);
@@ -317,7 +318,6 @@ export default class WorldScene extends Phaser.Scene {
           },
         );
       } else if (parsedData.type === "updatePlayer") {
-        console.log(parsedData.payload);
         const { id, x, y, initialState, key } = parsedData.payload;
         //check if the player being updated is present in the map or not
         if (!this.otherPlayer.has(id)) {
@@ -343,15 +343,19 @@ export default class WorldScene extends Phaser.Scene {
         const { key, id } = parsedData.payload;
         const otherPlayer = this.otherPlayer.get(id);
         if (otherPlayer) {
-          if (key !== "stop") {
-            otherPlayer.anims.play(key);
-            if (key === "left") {
+          if(key === "stop"){
+            otherPlayer.anims.stop();
+          }else{
+            if(key === "left"){
               otherPlayer.flipX = true;
-            }
-            if (key === "right") {
+              otherPlayer.anims.play(key,true);
+            }else if(key === "right"){
+              otherPlayer.anims.play(key,true);
               otherPlayer.flipX = false;
+            }else {
+              otherPlayer.anims.play(key,true);
             }
-          } else otherPlayer.anims.stop();
+          }
         }
       }
     };
@@ -360,7 +364,7 @@ export default class WorldScene extends Phaser.Scene {
 
     // emit player position to the server in regular interval
     this.time.addEvent({
-      delay: 60,
+      delay: 10,
       callback: () => {
         if (this.socket && this.socket.readyState === WebSocket.OPEN) {
           this.socket.send(
@@ -381,17 +385,6 @@ export default class WorldScene extends Phaser.Scene {
       loop: true,
     });
 
-    //spirite animations
-    mySprite.animations.forEach((animations) => {
-      this.anims.create({
-        key: animations.key.toString(),
-        frames: this.anims.generateFrameNumbers(mySprite.key.toString(), {
-          frames: animations.frames,
-        }),
-        frameRate: 10,
-        repeat: -1,
-      });
-    });
 
     //setting player bound
 
@@ -437,31 +430,33 @@ export default class WorldScene extends Phaser.Scene {
     }
 
     //animations
-
+    const myAnimations = this.sprites[this.mySpriteId].animations[0];
     if (this.cursors && this.cursors.left.isDown) {
-      this.player.anims.play("left", true);
+      this.player.anims.play(`left-${myAnimations.spriteId}`, true);
       this.player.flipX = true;
     } else if (this.cursors && this.cursors.right.isDown) {
-      this.player.anims.play("right", true);
+      this.player.anims.play(`right-${myAnimations.spriteId}`, true);
       this.player.flipX = false;
     } else if (this.cursors && this.cursors.down.isDown) {
-      this.player.anims.play("down", true);
+      this.player.anims.play(`down-${myAnimations.spriteId}`, true);
     } else if (this.cursors && this.cursors.up.isDown) {
-      this.player.anims.play("up", true);
+      this.player.anims.play(`up-${myAnimations.spriteId}`, true);
     } else {
       this.player.anims.stop();
     }
 
     //propagate animations
+    // let prevKey;
+    // let clock;
     if (
       this.cursors &&
       (this.cursors.left.isDown ||
         this.cursors.right.isDown ||
         this.cursors.up.isDown ||
         this.cursors.down.isDown)
-    ) {
-      let key;
-      if (this.cursors.down.isDown) {
+      ) {
+        let key;
+        if (this.cursors.down.isDown) {
         key = "down";
       } else if (this.cursors.up.isDown) {
         key = "up";
@@ -476,25 +471,25 @@ export default class WorldScene extends Phaser.Scene {
             type: "updateAnimation",
             payload: {
               id: this._id,
-              key: key,
+              key: `${key}-${myAnimations.spriteId}`,
               room: this.room,
             },
           }),
         );
       }
     } else {
-      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-        this.socket.send(
-          JSON.stringify({
-            type: "updateAnimation",
-            payload: {
-              id: this._id,
-              key: "stop",
-              room: this.room,
-            },
-          }),
-        );
-      }
+          if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+            this.socket.send(
+              JSON.stringify({
+                type: "updateAnimation",
+                payload: {
+                  id: this._id,
+                  key: "stop",
+                  room: this.room,
+                },
+              }),
+            );
+          }
     }
   }
 
