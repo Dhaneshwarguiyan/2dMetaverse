@@ -214,7 +214,7 @@ export default class WorldScene extends Phaser.Scene {
     this.map = this.make.tilemap({ key: "map" });
     const tiles: Phaser.Tilemaps.Tileset[] = [];
     const layers: Phaser.Tilemaps.TilemapLayer[] = [];
-    this.mySpriteId = Math.floor(Math.random()*4);
+    this.mySpriteId = Math.floor(Math.random() * 4);
     const mySprite = this.sprites[this.mySpriteId];
     this.spawnArea = this.map.getObjectLayer("spawn")?.objects;
     // const spawnPoints = this.map.findObject('spawn zone',(obj) => obj.name)
@@ -245,7 +245,6 @@ export default class WorldScene extends Phaser.Scene {
       mySprite.key.toString(),
       mySprite.initialState,
     );
-
     //setting depth of layers above sprite
     // layers[layers.length - 1].setDepth(1); //spawn should be the last layer in the array
     //no need of this will remove later..... after fixing layer in tiled images
@@ -262,18 +261,18 @@ export default class WorldScene extends Phaser.Scene {
     this._id = this.generateId(8);
 
     //spirite animations
-        this.sprites.map((sprite) => {
-          sprite.animations.map((animations)=>{
-              this.anims.create({
-                key: `${animations.key}-${animations.spriteId}`,
-                frames: this.anims.generateFrameNumbers(mySprite.key.toString(), {
-                  frames: animations.frames,
-                }),
-                frameRate: 10,
-                repeat: -1,
-              });
-          })
-      })
+    this.sprites.map((sprite) => {
+      sprite.animations.map((animations) => {
+        this.anims.create({
+          key: `${animations.key}-${animations.spriteId}`,
+          frames: this.anims.generateFrameNumbers(mySprite.key.toString(), {
+            frames: animations.frames,
+          }),
+          frameRate: 10,
+          repeat: -1,
+        });
+      });
+    });
 
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(
@@ -343,17 +342,14 @@ export default class WorldScene extends Phaser.Scene {
         const { key, id } = parsedData.payload;
         const otherPlayer = this.otherPlayer.get(id);
         if (otherPlayer) {
-          if(key === "stop"){
+          if (key === "stop") {
             otherPlayer.anims.stop();
-          }else{
-            if(key === "left"){
+          } else {
+            otherPlayer.anims.play(key, true);
+            if (key[0] === 'l') {
               otherPlayer.flipX = true;
-              otherPlayer.anims.play(key,true);
-            }else if(key === "right"){
-              otherPlayer.anims.play(key,true);
+            } else if(key[0] === 'r'){
               otherPlayer.flipX = false;
-            }else {
-              otherPlayer.anims.play(key,true);
             }
           }
         }
@@ -384,7 +380,6 @@ export default class WorldScene extends Phaser.Scene {
       },
       loop: true,
     });
-
 
     //setting player bound
 
@@ -454,9 +449,9 @@ export default class WorldScene extends Phaser.Scene {
         this.cursors.right.isDown ||
         this.cursors.up.isDown ||
         this.cursors.down.isDown)
-      ) {
-        let key;
-        if (this.cursors.down.isDown) {
+    ) {
+      let key;
+      if (this.cursors.down.isDown) {
         key = "down";
       } else if (this.cursors.up.isDown) {
         key = "up";
@@ -478,18 +473,18 @@ export default class WorldScene extends Phaser.Scene {
         );
       }
     } else {
-          if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-            this.socket.send(
-              JSON.stringify({
-                type: "updateAnimation",
-                payload: {
-                  id: this._id,
-                  key: "stop",
-                  room: this.room,
-                },
-              }),
-            );
-          }
+      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+        this.socket.send(
+          JSON.stringify({
+            type: "updateAnimation",
+            payload: {
+              id: this._id,
+              key: "stop",
+              room: this.room,
+            },
+          }),
+        );
+      }
     }
   }
 
