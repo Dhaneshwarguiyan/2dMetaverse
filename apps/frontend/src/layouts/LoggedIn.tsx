@@ -7,22 +7,22 @@ const LoggedIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    const token = localStorage.getItem('token');
-      const username = localStorage.getItem('username');
-      if(token === "" || !token){
-        navigate('/login');
-      }else{
-        dispatch(loginUser({token,username}))
-        navigate('/home');
-      }
-  },[])
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const username = localStorage.getItem("username");
+    if (token === "" || !token) {
+      navigate("/login");
+    } else {
+      dispatch(loginUser({ token, username }));
+      navigate("/home");
+    }
+  }, []);
 
   return (
     <div className="bg-white">
       <Outlet />
     </div>
-  )
-}
+  );
+};
 
-export default LoggedIn
+export default LoggedIn;

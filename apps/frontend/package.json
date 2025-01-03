@@ -4,15 +4,17 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "npm run prettier && vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "prettier": "npx prettier . --write",
     "preview": "vite preview"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",
     "axios": "^1.7.9",
     "phaser": "^3.87.0",
+    "prettier": "^3.4.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.2.0",
