@@ -17,8 +17,8 @@ const Map = ({ name }: propType) => {
 
   const [optionsDialog, setOptionsDialog] = useState<boolean>(false);
   const handleSpace = () => {
-    dispatch(initMap(name));
-    navigate("/meta");
+    dispatch(initMap(name)); //may be I dont need this cause i am using params to get/set room
+    navigate(`/${name}`);
   };
 
   const closeOnClickOutside = (e: MouseEvent) => {

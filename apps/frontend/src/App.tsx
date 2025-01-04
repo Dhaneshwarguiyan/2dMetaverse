@@ -25,7 +25,7 @@ function App() {
               <Route path="/home/dashboard" element={<Dashboard />} />
             </Route>
           </Route>
-          <Route path="/meta" element={<Metaverse />} />
+          <Route path="/:room" element={<Metaverse />} />
         </Routes>
       </BrowserRouter>
     </div>

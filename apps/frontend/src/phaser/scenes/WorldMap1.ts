@@ -346,9 +346,9 @@ export default class WorldScene extends Phaser.Scene {
             otherPlayer.anims.stop();
           } else {
             otherPlayer.anims.play(key, true);
-            if (key[0] === 'l') {
+            if (key[0] === "l") {
               otherPlayer.flipX = true;
-            } else if(key[0] === 'r'){
+            } else if (key[0] === "r") {
               otherPlayer.flipX = false;
             }
           }
