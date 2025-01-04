@@ -19,7 +19,7 @@ const Metaverse = () => {
   const [socket, setSocket] = useState<WebSocket>();
   const [sprites, setSprites] = useState<spriteType[]>();
   const [spritesAssets, setSpritesAssets] = useState<spriteAssetsType[]>();
-
+  console.log("Testing revert object")
   const getMapDetails = async () => {
     try {
       //importing map data
