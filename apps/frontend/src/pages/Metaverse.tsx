@@ -20,6 +20,7 @@ const Metaverse = () => {
   const [spritesAssets, setSpritesAssets] = useState<spriteAssetsType[]>();
 
   const getMapDetails = async () => {
+    console.log("test");
     try {
       //importing map data
       const response = await axios.get(
