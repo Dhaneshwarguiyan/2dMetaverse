@@ -20,6 +20,7 @@ const Metaverse = () => {
   const [sprites, setSprites] = useState<spriteType[]>();
   const [spritesAssets, setSpritesAssets] = useState<spriteAssetsType[]>();
   console.log("Testing revert object");
+  console.log("testing revert object 2");
   const getMapDetails = async () => {
     try {
       //importing map data
