@@ -11,7 +11,7 @@ import Navigate from "./pages/Navigate";
 
 function App() {
   return (
-    <div className="w-screen h-screen overflow-scroll">
+    <div className="w-screen h-screen overflow-hidden">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate />}>

@@ -12,14 +12,12 @@ import axios from "axios";
 const Metaverse = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {room} = useParams();
-  const token = localStorage.getItem('token');
+  const { room } = useParams();
+  const token = localStorage.getItem("token");
   const [mapData, setMapData] = useState<mapType>();
   const [socket, setSocket] = useState<WebSocket>();
   const [sprites, setSprites] = useState<spriteType[]>();
   const [spritesAssets, setSpritesAssets] = useState<spriteAssetsType[]>();
-  console.log("Testing revert object");
-  console.log("testing revert object 2");
   const getMapDetails = async () => {
     try {
       //importing map data
@@ -75,7 +73,7 @@ const Metaverse = () => {
 
   return (
     <div className="w-screen h-screen flex justify-center items-center relative bg-slate-700">
-      {socket && mapData && sprites && spritesAssets && room &&(
+      {socket && mapData && sprites && spritesAssets && room && (
         <div>
           <Game
             socket={socket}

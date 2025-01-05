@@ -4,6 +4,7 @@ import { loginUser } from "../slices/userslice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Button from "../component/ui/Button";
+import InputField from "../component/ui/InputField";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -46,36 +47,30 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="w-[300px] flex flex-col border border-blue-200 rounded-lg px-3 py-6 text-base mx-auto mt-32">
+    <div className="w-[400px] flex flex-col border border-blue-200 rounded-lg px-3 py-6 text-base mx-auto mt-32">
       <div className="mx-auto mb-4">
         <span className="text-xl">
           Log into{" "}
           <span className="text-2xl text-blue-800 font-extrabold">Trek</span>
         </span>
       </div>
-      <label htmlFor="email" className="flex flex-col gap-2 mb-3">
-        Email
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          placeholder="email"
-          onChange={inputHandler}
-          className="text-sm border py-2 px-2 rounded-lg text-gray-700"
-        />
-      </label>
-      <label htmlFor="password" className="flex flex-col gap-2 mb-5">
-        Password
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          placeholder="password"
-          onChange={inputHandler}
-          className="text-sm border py-2 px-1 rounded-lg text-gray-700"
-        />
-      </label>
-      <span onClick={submitHandler} className="mx-auto">
+      <InputField
+        label={"Email"}
+        type="text"
+        name="email"
+        value={formData.email}
+        placeholder={"jhondoe@gmail.com"}
+        handler={inputHandler}
+      />
+      <InputField
+        label={"Password"}
+        type="password"
+        name="password"
+        value={formData.password}
+        placeholder={"Password"}
+        handler={inputHandler}
+      />
+      <span onClick={submitHandler} className="mx-auto mt-4">
         <Button text="Submit" type="primary" />
       </span>
     </div>
