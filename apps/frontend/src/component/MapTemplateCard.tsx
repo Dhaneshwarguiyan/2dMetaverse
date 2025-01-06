@@ -13,7 +13,7 @@ const MapTemplateCard = ({ name, id }: { name: string; id: number }) => {
     try {
       //use mutation func from use query to dynamically update on any changes
       await axios.post(
-        `http://localhost:8000/api/v1/maps/spaces`,
+        `${import.meta.env.VITE_API}/api/v1/maps/spaces`,
         {
           room: room,
           mapId: id,

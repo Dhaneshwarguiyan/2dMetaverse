@@ -22,7 +22,7 @@ const SignupPage = () => {
   const submitHandler = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/signup",
+        `${import.meta.env.VITE_API}/api/v1/users/signup`,
         {
           firstName: formData.firstName,
           lastName: formData.lastName,

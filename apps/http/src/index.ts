@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import { Response,Request } from "express";
 
 //routes/middleware imports
 import messageRoutes from "./routes/messageRoutes";
@@ -29,7 +30,7 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/messages", authMiddleware, messageRoutes);
 app.use("/api/v1/maps", authMiddleware, mapRoutes);
 app.use("/api/v1/sprites", authMiddleware, spriteRoutes);
-app.get("/test", (req, res) => {
+app.get("/test", (req:Request, res:Response) => {
   res.send("Test route");
 });
 

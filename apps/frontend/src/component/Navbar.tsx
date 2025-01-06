@@ -13,13 +13,9 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState<boolean>(false);
   const user = useSelector((state: RootState) => state.user);
-
   const dropDownRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     document.addEventListener("mousedown", closeEventHandler);
-    document.addEventListener("scroll", () => {
-      console.log("scfsdff");
-    });
     return () => {
       document.removeEventListener("mousedown", closeEventHandler);
     };
@@ -36,7 +32,7 @@ const Navbar = () => {
 
   return (
     <motion.div
-      className={`w-screen h-[70px] flex items-center backdrop-blur-3xl z-40 shadow-md bg-white absolute`}
+      className={`w-screen h-[70px] flex items-center backdrop-blur-3xl z-40 shadow-md bg-white ${!user.loggedin ? 'absolute':'relative mb-8'}`}
       initial={{
         y: -100,
       }}

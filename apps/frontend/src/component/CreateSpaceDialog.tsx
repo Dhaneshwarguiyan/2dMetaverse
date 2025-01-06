@@ -13,7 +13,7 @@ const CreateSpaceDialog = () => {
   const getMaps = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/v1/maps/all`,
+        `${import.meta.env.VITE_API}/api/v1/maps/all`,
         {
           headers: {
             Authorization: `${localStorage.getItem("token")}`,

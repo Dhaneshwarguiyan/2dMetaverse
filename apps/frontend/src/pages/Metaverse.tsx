@@ -22,7 +22,7 @@ const Metaverse = () => {
     try {
       //importing map data
       const response = await axios.get(
-        `http://localhost:8000/api/v1/maps/space/${room}`,
+        `${import.meta.env.VITE_API}/api/v1/maps/space/${room}`,
         {
           headers: {
             Authorization: `${token}`,
@@ -32,7 +32,7 @@ const Metaverse = () => {
       setMapData(response.data);
       //getting sprite data
       const sprites = await axios.get(
-        `http://localhost:8000/api/v1/sprites/get/sprites`,
+        `${import.meta.env.VITE_API}/api/v1/sprites/get/sprites`,
         {
           headers: {
             Authorization: `${token}`,
@@ -42,7 +42,7 @@ const Metaverse = () => {
       setSprites(sprites.data);
       //getting sprite assets
       const spritesAssets = await axios.get(
-        `http://localhost:8000/api/v1/sprites/get/assets`,
+        `${import.meta.env.VITE_API}/api/v1/sprites/get/assets`,
         {
           headers: {
             Authorization: `${token}`,
