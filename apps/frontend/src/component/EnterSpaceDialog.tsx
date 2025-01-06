@@ -13,11 +13,10 @@ const EnterSpaceDialog = () => {
   const [roomCode, setRoomCode] = useState<string>("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const getSpace = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/v1/maps/space/get/${roomCode}`,
+        `${import.meta.env.VITE_API}/api/v1/maps/space/get/${roomCode}`,
         {
           headers: {
             Authorization: `${localStorage.getItem("token")}`,

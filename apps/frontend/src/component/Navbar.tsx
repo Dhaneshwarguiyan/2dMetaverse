@@ -6,12 +6,13 @@ import profile from "../assets/profile.png";
 import { useNavigate } from "react-router-dom";
 import ProfileDropDown from "./ProfileDropDown";
 import { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
+import { easeInOut } from "motion";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState<boolean>(false);
   const user = useSelector((state: RootState) => state.user);
-
   const dropDownRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     document.addEventListener("mousedown", closeEventHandler);
@@ -30,14 +31,28 @@ const Navbar = () => {
   };
 
   return (
-    <div>
-      <div className="w-[1180px] mx-auto h-[60px] flex justify-between items-center mb-4">
+    <motion.div
+      className={`w-screen h-[70px] flex items-center backdrop-blur-3xl z-40 shadow-md bg-white ${!user.loggedin ? 'absolute':'relative mb-8'}`}
+      initial={{
+        y: -100,
+      }}
+      animate={{
+        y: 0,
+      }}
+      transition={{
+        duration: 0.4,
+        ease: easeInOut,
+      }}
+    >
+      <div className="w-[1180px] mx-auto flex justify-between items-center mb-4 pt-3">
         <div
           className="flex gap-3 items-center cursor-pointer"
           onClick={() => navigate("/")}
         >
           <img src={icon} alt="icon" className="w-[50px]" />
-          <span className="text-blue-600 text-3xl font-extrabold">Trek</span>
+          <span className="text-gray-900 text-3xl font-extrabold">
+            Pixelverse
+          </span>
         </div>
         {!user.loggedin ? (
           <div className="h-full flex gap-3 items-center">
@@ -74,7 +89,7 @@ const Navbar = () => {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

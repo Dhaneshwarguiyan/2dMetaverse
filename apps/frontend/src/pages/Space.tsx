@@ -20,7 +20,7 @@ const Space = () => {
   const getSpaces = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/maps/spaces/all",
+        `${import.meta.env.VITE_API}/api/v1/maps/spaces/all`,
         {
           headers: {
             Authorization: `${token}`,

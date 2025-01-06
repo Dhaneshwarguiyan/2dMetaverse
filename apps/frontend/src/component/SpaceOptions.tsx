@@ -15,7 +15,7 @@ const SpaceOptions = ({
   const deleteSpace = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/maps/delete`,
+        `${import.meta.env.VITE_API}/api/v1/maps/delete`,
         {
           room,
         },

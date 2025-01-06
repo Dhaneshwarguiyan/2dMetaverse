@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import InputField from "../component/ui/InputField";
+import Button from "../component/ui/Button";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +22,7 @@ const SignupPage = () => {
   const submitHandler = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/signup",
+        `${import.meta.env.VITE_API}/api/v1/users/signup`,
         {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -36,44 +38,56 @@ const SignupPage = () => {
   };
 
   return (
-    <div>
-      Signup page
-      <input
+    <div className="w-[500px] flex flex-col border border-blue-200 rounded-lg px-4 py-6 text-sm mx-auto mt-32">
+      <div className="mx-auto mb-4">
+        <span className="text-xl">
+          Signup into{" "}
+          <span className="text-2xl text-blue-800 font-extrabold">Trek</span>
+        </span>
+      </div>
+      <InputField
+        label="Username"
         type="text"
         name="username"
         value={formData.username}
         placeholder="username"
-        onChange={inputHandler}
+        handler={inputHandler}
       />
-      <input
+      <InputField
+        label="firstname"
         type="text"
-        name="firstname"
+        name="username"
         value={formData.firstName}
         placeholder="firstname"
-        onChange={inputHandler}
+        handler={inputHandler}
       />
-      <input
+      <InputField
+        label="lastname"
         type="text"
         name="lastname"
-        value={formData.lastName}
+        value={formData.username}
         placeholder="lastname"
-        onChange={inputHandler}
+        handler={inputHandler}
       />
-      <input
+      <InputField
+        label="email"
         type="email"
         name="email"
         value={formData.email}
-        placeholder="email"
-        onChange={inputHandler}
+        placeholder="jhondoe@gmail.com"
+        handler={inputHandler}
       />
-      <input
+      <InputField
+        label="password"
         type="password"
         name="password"
         value={formData.password}
         placeholder="password"
-        onChange={inputHandler}
+        handler={inputHandler}
       />
-      <button onClick={submitHandler}>Submit</button>
+      <span onClick={submitHandler} className="mx-auto mt-4">
+        <Button text="Submit" type="primary" />
+      </span>
     </div>
   );
 };

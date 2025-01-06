@@ -11,7 +11,7 @@ import Navigate from "./pages/Navigate";
 
 function App() {
   return (
-    <div className="w-screen h-screen overflow-scroll">
+    <div className="w-screen h-screen overflow-hidden">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate />}>
@@ -25,7 +25,7 @@ function App() {
               <Route path="/home/dashboard" element={<Dashboard />} />
             </Route>
           </Route>
-          <Route path="/meta" element={<Metaverse />} />
+          <Route path="/:room" element={<Metaverse />} />
         </Routes>
       </BrowserRouter>
     </div>

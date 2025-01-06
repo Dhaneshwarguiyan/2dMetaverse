@@ -31,7 +31,6 @@ const Navigate = () => {
     <div className="w-[100vw] overflow-hidden">
       {entryCodeDialog && <EnterSpaceDialog />}
       {createSpaceDialog && <CreateSpaceDialog />}
-
       <Navbar />
       <Outlet />
     </div>
