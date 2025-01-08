@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import img from "../assets/bg2.jpg";
 import { motion } from "motion/react";
+import RightArrow from "../icons/RightArrow";
 
 const Tutorial = () => {
   const navigate = useNavigate();
@@ -10,14 +11,14 @@ const Tutorial = () => {
         className="w-[1180px] mx-auto flex flex-col gap-4"
         initial={{
           opacity: 0,
-          y: 50,
+          y: 80,
         }}
         whileInView={{
           opacity: 1,
           y: 0,
         }}
         transition={{
-          duration: 0.6,
+          duration: 0.7,
         }}
       >
         <motion.div className="text-center text-5xl">
@@ -33,12 +34,13 @@ const Tutorial = () => {
             and community gatherings.
           </div>
           <div
-            className="text-blue-500 font-semibold mt-6"
+            className="text-blue-500 font-semibold mt-6 cursor-pointer flex gap-2 mb-2"
             onClick={() => {
               navigate("/login");
             }}
           >
-            Try it Now
+            <span>Try it Now</span>
+            <RightArrow />
           </div>
           <img src={img} alt="" className="object-contain rounded-lg" />
         </motion.div>

@@ -18,15 +18,16 @@ const clientsMessage = new Map<string, WebSocket[]>();
 
 wss.on("connection", (socket) => {
   let myId = -1;
+  let myRoom = "";
   //listen for messages from the client
   socket.on("message", (message) => {
     const parsedData = JSON.parse(message.toString());
 
     //this will initialize a room containing all the sockets
 
-    //join message
-    if (parsedData.type === "joinmessage") {
-      const { room } = parsedData.payload;
+    //join game
+    if (parsedData.type === "joingame") {
+      const { id, x, y, room, initialState ,key} = parsedData.payload;
       if (clientsMessage.has(room)) {
         const clientArray = clientsMessage.get(room);
         if (clientArray && !clientArray?.includes(socket)) {
@@ -35,12 +36,7 @@ wss.on("connection", (socket) => {
       } else {
         clientsMessage.set(room, [socket]);
       }
-    }
-
-    //join game
-    if (parsedData.type === "joingame") {
-      const { id, x, y, room, initialState ,key} = parsedData.payload;
-
+      myRoom = room;
       myId = id;
 
       if (id && x && y && initialState && key) {
@@ -138,8 +134,13 @@ wss.on("connection", (socket) => {
   socket.on("close", () => {
     console.log(`${myId} disconnected`);
     players.delete(myId);
-
+    const playersInRoom = clientsMessage.get(myRoom);
+    const newPlayersArray = playersInRoom?.filter((ws) => {
+      return ws !== socket;
+    })
+    if(newPlayersArray) clientsMessage.set(myRoom,newPlayersArray);
     //removing socket instance from message memory
+
 
     // broadcasting the removal of the client
     wss.clients.forEach((client) => {

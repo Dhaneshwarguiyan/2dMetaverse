@@ -26,7 +26,7 @@ const BackgroundImages = () => {
     <motion.img
       src={bg}
       alt=""
-      className="absolute  w-screen"
+      className="absolute  w-screen h-full object-cover"
       animate={{
         scale: [1, 1.07, 1],
       }}

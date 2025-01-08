@@ -8,6 +8,7 @@ import messageRoutes from "./routes/messageRoutes";
 import userRoutes from "./routes/useRoutes";
 import mapRoutes from "./routes/mapRoutes";
 import spriteRoutes from './routes/spriteRoutes';
+import feedbackRoutes from './routes/feedbackRoutes';
 import authMiddleware from "./middlewares/authMiddleware";
 
 dotenv.config();
@@ -30,6 +31,7 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/messages", authMiddleware, messageRoutes);
 app.use("/api/v1/maps", authMiddleware, mapRoutes);
 app.use("/api/v1/sprites", authMiddleware, spriteRoutes);
+app.use("/api/v1/feedback", feedbackRoutes);
 app.get("/test", (req:Request, res:Response) => {
   res.send("Test route");
 });

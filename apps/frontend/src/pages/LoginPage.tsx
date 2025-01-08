@@ -47,7 +47,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="w-[400px] flex flex-col border border-blue-200 rounded-lg px-3 py-6 text-base mx-auto mt-32">
+    <div className="w-[400px] flex flex-col border border-blue-200 rounded-lg px-5 py-6 text-base mx-auto mt-32 shadow-all mb-2">
       <div className="mx-auto mb-4">
         <span className="text-xl">
           Log into{" "}

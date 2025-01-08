@@ -56,9 +56,7 @@ const Game = ({
     };
   }, [socket, name, room]);
   return (
-    <div>
-      <div ref={gameContainerRef} className="w-screen h-screen relative"></div>
-    </div>
+    <div ref={gameContainerRef} className="w-screen h-screen relative"></div>
   );
 };
 

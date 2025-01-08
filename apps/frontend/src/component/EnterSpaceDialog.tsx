@@ -25,7 +25,7 @@ const EnterSpaceDialog = () => {
       );
       if (response.data.message) {
         dispatch(initMap(roomCode));
-        navigate("/meta");
+        navigate(`${roomCode}`);
       } else {
         console.log("No room exists");
       }

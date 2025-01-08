@@ -9,72 +9,74 @@ datasource db {
 
 //rename rooms with spaces....
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  username String @unique
-  password String
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  username  String     @unique
+  password  String
   firstName String
-  lastName String?
-  messages Messages[]
-  rooms Rooms[] //include recently visited rooms "recentlyVisited spaces"
+  lastName  String?
+  messages  Messages[]
+  rooms     Rooms[] //include recently visited rooms "recentlyVisited spaces"
 }
 
 model Messages {
-  id Int @id @default(autoincrement())
+  id      Int     @id @default(autoincrement())
   message String
-  room String
-  sender String
-  userId Int
-  user User @relation(fields: [userId],references: [id])
+  room    String
+  sender  String
+  read    String[]
+  userId  Int
+  user    User    @relation(fields: [userId], references: [id])
 }
 
 model Maps {
-  id Int @id @default(autoincrement())
-  name String @unique
-  tileSet String 
-  rooms Rooms[]
-  layers MapLayers[]
-  assets MapAssets[]
+  id      Int         @id @default(autoincrement())
+  name    String      @unique
+  tileSet String
+  rooms   Rooms[]
+  layers  MapLayers[]
+  assets  MapAssets[]
 }
 
 model Rooms {
-  id Int @id @default(autoincrement())
-  room String @unique
-  mapId Int
-  map Maps @relation(fields: [mapId], references: [id])
+  id     Int    @id @default(autoincrement())
+  room   String @unique
+  mapId  Int
+  map    Maps   @relation(fields: [mapId], references: [id])
   userId Int
-  user User @relation(fields: [userId],references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model MapLayers {
-  id Int @id @default(autoincrement())
-  name String
+  id    Int    @id @default(autoincrement())
+  name  String
   depth Int
   mapId Int
-  map Maps @relation(fields: [mapId],references: [id])
+  map   Maps   @relation(fields: [mapId], references: [id])
 }
 
 model MapAssets {
-  id Int @id @default(autoincrement())
-  path String @unique
-  name String @unique
+  id    Int    @id @default(autoincrement())
+  path  String @unique
+  name  String @unique
   mapId Int
-  map Maps @relation(fields: [mapId],references: [id])
+  map   Maps   @relation(fields: [mapId], references: [id])
 }
+
 model SpriteAssets {
-  key Int @id @default(autoincrement())
-  path String
-  frameWidth Int
+  key         Int       @id @default(autoincrement())
+  path        String
+  frameWidth  Int
   frameHeight Int
-  sprites Sprites[]
+  sprites     Sprites[]
 }
 
 model Sprites {
-  id Int @id @default(autoincrement())
+  id           Int                @id @default(autoincrement())
   initialState Int
-  animations SpriteAnimations[]
-  key Int
-  keyRelation SpriteAssets @relation(fields: [key],references: [key])
+  animations   SpriteAnimations[]
+  key          Int
+  keyRelation  SpriteAssets       @relation(fields: [key], references: [key])
 }
 
 enum AnimationKeys {
@@ -85,9 +87,15 @@ enum AnimationKeys {
 }
 
 model SpriteAnimations {
-  id Int @id @default(autoincrement())
-  key AnimationKeys
-  frames Int[]
+  id       Int           @id @default(autoincrement())
+  key      AnimationKeys
+  frames   Int[]
   spriteId Int
-  sprite Sprites @relation(fields: [spriteId], references: [id])
+  sprite   Sprites       @relation(fields: [spriteId], references: [id])
+}
+
+model Feedbacks {
+  id        Int      @id @default(autoincrement())
+  feedback  String
+  createdAt DateTime @default(now())
 }

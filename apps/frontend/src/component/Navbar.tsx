@@ -32,7 +32,7 @@ const Navbar = () => {
 
   return (
     <motion.div
-      className={`w-screen h-[70px] flex items-center backdrop-blur-3xl z-40 shadow-md bg-white ${!user.loggedin ? 'absolute':'relative mb-8'}`}
+      className={`w-screen h-[70px] flex items-center backdrop-blur-3xl z-40 shadow-md bg-white ${!user.loggedin ? "absolute" : "relative mb-8"}`}
       initial={{
         y: -100,
       }}

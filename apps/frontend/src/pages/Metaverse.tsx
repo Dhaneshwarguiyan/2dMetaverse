@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Game from "../phaser/Game";
-import Chat from "../component/Chat";
+// import Chat from "../component/Chat";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { loginUser } from "../slices/userslice";
@@ -8,6 +8,7 @@ import { mapType } from "../types/types";
 import { spriteType } from "../types/types";
 import { spriteAssetsType } from "../types/types";
 import axios from "axios";
+import Sidebar from "../component/Sidebar";
 
 const Metaverse = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const Metaverse = () => {
   const [socket, setSocket] = useState<WebSocket>();
   const [sprites, setSprites] = useState<spriteType[]>();
   const [spritesAssets, setSpritesAssets] = useState<spriteAssetsType[]>();
+
   const getMapDetails = async () => {
     try {
       //importing map data
@@ -83,7 +85,7 @@ const Metaverse = () => {
             spritesAssets={spritesAssets}
           />
           <div className="absolute bottom-0">
-            <Chat socket={socket} room={room} />
+            <Sidebar socket={socket} room={room} />
           </div>
         </div>
       )}

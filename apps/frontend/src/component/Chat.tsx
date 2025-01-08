@@ -1,19 +1,52 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Text from "./Text";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import axios from "axios";
+import Button from "./ui/Button";
 
 interface messageType {
-  sender: string;
+  // id:number;
   message: string;
+  // read:boolean;
+  sender: string;
+  // userId: number;
 }
 
-const Chat = ({ socket, room }: { socket: WebSocket; room: string }) => {
+const Chat = ({
+  socket,
+  room,
+  messages,
+  setMessages,
+}: {
+  socket: WebSocket;
+  room: string;
+  messages: messageType[];
+  setMessages: React.Dispatch<React.SetStateAction<messageType[] | undefined>>;
+}) => {
   const [text, setText] = useState<string>("");
-  const [messages, setMessages] = useState<messageType[]>();
+  const scollRef = useRef<HTMLDivElement>(null);
   const name = useSelector((state: RootState) => state.user.info?.username);
+  // const fn = ()=>{
+  //   console.log("focus")
+  // }
+  // const fn1 = ()=>{
+  //   console.log("blur")
+  // }
+
+  // useEffect(()=>{
+  //   // if(inputRef.current){
+  //     inputRef.current?.addEventListener('focus',fn);
+  //     inputRef.current?.addEventListener('blur',fn1);
+  // },[])
+
+  useEffect(() => {
+    if (scollRef.current)
+      scollRef.current.scrollTop = scollRef.current.scrollHeight;
+  }, [text]);
 
   const handleMessage = () => {
+    updateMessages();
     if (socket.readyState === WebSocket.OPEN) {
       const messageData = {
         type: "message",
@@ -34,46 +67,38 @@ const Chat = ({ socket, room }: { socket: WebSocket; room: string }) => {
     setText("");
   };
 
-  useEffect(() => {
-    if (socket.readyState === WebSocket.OPEN) {
-      const messageData = {
-        type: "joinmessage",
-        payload: {
-          room,
+  const updateMessages = async () => {
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_API}/api/v1/messages`,
+        {
+          message: text,
+          sender: name,
+          room: room,
         },
-      };
-      socket.send(JSON.stringify(messageData));
+        {
+          headers: {
+            Authorization: `${localStorage.getItem("token")}`,
+          },
+        },
+      );
+    } catch (error) {
+      console.log(error);
     }
-    const messageEvent = (event: { data: string }) => {
-      const parsedData = JSON.parse(event.data);
-      if (parsedData && parsedData.type === "message") {
-        const { sender, message } = parsedData.payload;
-        setMessages((prev) => {
-          if (prev) return [...prev, { sender, message }];
-          else return [{ sender, message }];
-        });
-      }
-    };
-    if (socket.readyState === WebSocket.OPEN) {
-      socket.addEventListener("message", messageEvent);
-    } else {
-      console.log("Socket not ready");
-    }
-
-    return () => {
-      socket.removeEventListener("message", messageEvent);
-    };
-  }, [socket]);
+  };
 
   return (
-    <div className="backdrop-blur-sm hover:duration-500 w-[400px] h-[600px] p-4 m-2 flex flex-col justify-end gap-4">
-      <div className="">
+    <div className="backdrop-blur-sm hover:duration-500 h-auto flex flex-col justify-end rounded-lg">
+      <div
+        className="h-[400px] overflow-y-scroll pl-2 mt-2 scrollbar"
+        ref={scollRef}
+      >
         {messages &&
           messages.map((data, key) => {
             return <Text text={data.message} sender={data.sender} key={key} />;
           })}
       </div>
-      <div className="w-full flex gap-3">
+      <div className="w-full flex gap-3 px-4 pb-4 pt-2 items-center">
         <input
           type="text"
           placeholder="message"
@@ -81,14 +106,11 @@ const Chat = ({ socket, room }: { socket: WebSocket; room: string }) => {
           onChange={(e) => {
             setText(e.target.value);
           }}
-          className="px-3 py-2 rounded-lg"
+          className="px-3 py-2 rounded-lg shadow-md border-2 outline-none"
         />
-        <button
-          className="bg-blue-500 px-3 py-2 rounded-lg"
-          onClick={handleMessage}
-        >
-          Send
-        </button>
+        <span onClick={handleMessage}>
+          <Button text="Send" type="primary" />
+        </span>
       </div>
     </div>
   );
