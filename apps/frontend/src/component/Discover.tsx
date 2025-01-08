@@ -11,14 +11,14 @@ const Discover = () => {
         className="w-[1180px] h-full mx-auto flex flex-col items-center gap-4"
         initial={{
           opacity: 0,
-          y: 50,
+          y: 80,
         }}
         whileInView={{
           opacity: 1,
           y: 0,
         }}
         transition={{
-          duration: 0.6,
+          duration: 0.7,
         }}
       >
         <div className="w-full text-center text-4xl py-6">

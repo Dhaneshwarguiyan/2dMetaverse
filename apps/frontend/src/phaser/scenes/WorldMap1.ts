@@ -169,7 +169,7 @@ export default class WorldScene extends Phaser.Scene {
   preload() {
     //assets such as tile image
     this.mapData.assets?.forEach((asset) => {
-      this.load.image(asset.id.toString(), asset.path);
+      this.load.image(`${asset.id.toString()}`, asset.path);
     });
 
     //load tileset
@@ -177,7 +177,7 @@ export default class WorldScene extends Phaser.Scene {
 
     //load character
     this.spriteAssets.forEach((sprite) => {
-      this.load.spritesheet(sprite.key.toString(), sprite.path, {
+      this.load.spritesheet(`${sprite.key.toString()}-sprite`, sprite.path, {
         frameWidth: sprite.frameWidth,
         frameHeight: sprite.frameHeight,
       });
@@ -209,12 +209,11 @@ export default class WorldScene extends Phaser.Scene {
     }
     return answer;
   };
-
   create() {
     this.map = this.make.tilemap({ key: "map" });
     const tiles: Phaser.Tilemaps.Tileset[] = [];
     const layers: Phaser.Tilemaps.TilemapLayer[] = [];
-    this.mySpriteId = Math.floor(Math.random() * 4);
+    this.mySpriteId = Math.floor(Math.random() * this.sprites.length);
     const mySprite = this.sprites[this.mySpriteId];
     this.spawnArea = this.map.getObjectLayer("spawn")?.objects;
     // const spawnPoints = this.map.findObject('spawn zone',(obj) => obj.name)
@@ -237,14 +236,19 @@ export default class WorldScene extends Phaser.Scene {
         }
       });
     }
+    // this.player?.preFX?.addVignette(0.5, 0.5, 0, 0.5);
     const position = this.generateRandomPosition();
-    //adding player sprite
+    console.log(mySprite);
     this.player = this.physics.add.sprite(
       position.x,
       position.y,
-      mySprite.key.toString(),
+      `${mySprite.key.toString()}-sprite`,
+      //adding player sprite
       mySprite.initialState,
     );
+
+    //adding shadows
+    // this.player.preFX?.addShadow(-5, 20, 0.006, 1, 0x333333, 10);
     //setting depth of layers above sprite
     // layers[layers.length - 1].setDepth(1); //spawn should be the last layer in the array
     //no need of this will remove later..... after fixing layer in tiled images
@@ -265,7 +269,7 @@ export default class WorldScene extends Phaser.Scene {
       sprite.animations.map((animations) => {
         this.anims.create({
           key: `${animations.key}-${animations.spriteId}`,
-          frames: this.anims.generateFrameNumbers(mySprite.key.toString(), {
+          frames: this.anims.generateFrameNumbers(`${mySprite.key.toString()}-sprite`, {
             frames: animations.frames,
           }),
           frameRate: 10,
@@ -273,7 +277,6 @@ export default class WorldScene extends Phaser.Scene {
         });
       });
     });
-
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(
         JSON.stringify({
@@ -283,7 +286,7 @@ export default class WorldScene extends Phaser.Scene {
             x: this.player.x,
             y: this.player.y,
             initialState: mySprite.initialState,
-            key: mySprite.key.toString(),
+            key: `${mySprite.key.toString()}-sprite`,
             room: this.room,
           },
         }),
@@ -371,7 +374,7 @@ export default class WorldScene extends Phaser.Scene {
                 x: this.player.x,
                 y: this.player.y,
                 initialState: mySprite.initialState,
-                key: mySprite.key.toString(),
+                key: `${mySprite.key.toString()}-sprite`,
                 room: this.room,
               },
             }),

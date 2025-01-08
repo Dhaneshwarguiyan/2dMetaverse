@@ -73,12 +73,18 @@ export const deleteSpaces = async(req:Request,res:Response)=>{
     try {
       const { room } = req.body;
       const id = req.userId;
-      const response  = await prisma.rooms.delete({
+      const messages = prisma.messages.deleteMany({
+        where:{
+          room:room
+        }
+      })
+      const rooms  =  prisma.rooms.delete({
         where:{
           room,
           userId:Number(id)
         }
       })
+      const response = await prisma.$transaction([messages,rooms])
       res.send(response);
     } catch (error) {
       console.log(error);

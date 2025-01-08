@@ -2,8 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import InputField from "../component/ui/InputField";
 import Button from "../component/ui/Button";
+import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -31,6 +33,7 @@ const SignupPage = () => {
           password: formData.password,
         },
       );
+      navigate("/login");
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -38,11 +41,11 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="w-[500px] flex flex-col border border-blue-200 rounded-lg px-4 py-6 text-sm mx-auto mt-32">
+    <div className="w-[500px] flex flex-col border border-blue-200 rounded-lg px-5 py-6 text-sm mx-auto mt-32 shadow-all mb-2">
       <div className="mx-auto mb-4">
-        <span className="text-xl">
+        <span className="text-3xl">
           Signup into{" "}
-          <span className="text-2xl text-blue-800 font-extrabold">Trek</span>
+          <span className="text-4xl text-blue-800 font-extrabold">Trek</span>
         </span>
       </div>
       <InputField
@@ -56,7 +59,7 @@ const SignupPage = () => {
       <InputField
         label="firstname"
         type="text"
-        name="username"
+        name="firstName"
         value={formData.firstName}
         placeholder="firstname"
         handler={inputHandler}
@@ -64,8 +67,8 @@ const SignupPage = () => {
       <InputField
         label="lastname"
         type="text"
-        name="lastname"
-        value={formData.username}
+        name="lastName"
+        value={formData.lastName}
         placeholder="lastname"
         handler={inputHandler}
       />
