@@ -8,9 +8,11 @@ import { useEffect, useRef, useState } from "react";
 
 interface propType {
   name: string;
+  type: "owner" | "guest";
+  removeVisitedSpaces: (arg0: string) => void;
 }
 
-const Map = ({ name }: propType) => {
+const Map = ({ name, type, removeVisitedSpaces }: propType) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const optionsDialogRef = useRef<HTMLDivElement>(null);
@@ -59,7 +61,12 @@ const Map = ({ name }: propType) => {
           </span>
           <span ref={optionsDialogRef}>
             {optionsDialog && (
-              <SpaceOptions setOptionsDialog={setOptionsDialog} room={name} />
+              <SpaceOptions
+                setOptionsDialog={setOptionsDialog}
+                room={name}
+                type={type}
+                removeVisitedSpaces={removeVisitedSpaces}
+              />
             )}
           </span>
         </span>

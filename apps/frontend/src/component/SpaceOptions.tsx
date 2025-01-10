@@ -7,14 +7,18 @@ import { updateSpace } from "../slices/renderSlice";
 const SpaceOptions = ({
   setOptionsDialog,
   room,
+  type,
+  removeVisitedSpaces,
 }: {
   setOptionsDialog: React.Dispatch<React.SetStateAction<boolean>>;
   room: string;
+  type: "owner" | "guest";
+  removeVisitedSpaces: (arg0: string) => void;
 }) => {
   const dispatch = useDispatch();
   const deleteSpace = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API}/api/v1/maps/delete`,
         {
           room,
@@ -25,12 +29,18 @@ const SpaceOptions = ({
           },
         },
       );
-      console.log(response.data);
       dispatch(updateSpace());
-      closeOptions();
     } catch (error) {
       console.log(error);
     }
+  };
+  const removeDeleteSpace = () => {
+    if (type === "owner") {
+      deleteSpace();
+    } else {
+      removeVisitedSpaces(room);
+    }
+    closeOptions();
   };
   const closeOptions = () => {
     setOptionsDialog(false);
@@ -45,12 +55,12 @@ const SpaceOptions = ({
       </div>
       <div
         className="flex items-center gap-2 text-red-500 border-t-2 pt-2 mt-2"
-        onClick={deleteSpace}
+        onClick={removeDeleteSpace}
       >
         <span>
           <Delete />
         </span>
-        <span>Delete Space</span>
+        <span>{type === "owner" ? "Delete" : "Remove"} Space</span>
       </div>
     </div>
   );

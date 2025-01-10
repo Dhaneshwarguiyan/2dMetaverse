@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Space from "./pages/Space";
 import Navigate from "./pages/Navigate";
+import { Bounce, ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -28,6 +29,19 @@ function App() {
           <Route path="/:room" element={<Metaverse />} />
         </Routes>
       </BrowserRouter>
+      <ToastContainer
+        position="top-center"
+        autoClose={1000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
     </div>
   );
 }

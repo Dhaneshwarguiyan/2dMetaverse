@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Button from "../component/ui/Button";
 import InputField from "../component/ui/InputField";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -31,18 +32,21 @@ const LoginPage = () => {
         },
       );
       if (response) {
-        dispatch(
-          loginUser({
-            token: response.data.token,
-            username: response.data.username,
-          }),
-        );
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("username", response.data.username);
-        navigate("/home");
+        toast.success(`Welcome ${response.data.username}`);
+        setTimeout(() => {
+          dispatch(
+            loginUser({
+              token: response.data.token,
+              username: response.data.username,
+            }),
+          );
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("username", response.data.username);
+          navigate("/home");
+        }, 1000);
       }
-    } catch (error) {
-      console.log(error);
+    } catch {
+      toast.error("Incorrect Credentials");
     }
   };
 

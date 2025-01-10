@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Search from "../icons/Search";
 import Button from "./ui/Button";
 import Add from "../icons/Add";
@@ -10,8 +10,13 @@ import { useDispatch } from "react-redux";
 
 const tiles = ["Recent Spaces", "My Space"];
 
-const NavPanel = () => {
-  const [activeTab, setActiveTab] = useState<string>("Recent Spaces");
+const NavPanel = ({
+  activeTab,
+  setActiveTab,
+}: {
+  activeTab: string;
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const [search, setSearch] = useState<string>("");
   const dispatch = useDispatch();
   return (

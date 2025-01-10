@@ -3,129 +3,13 @@ import { mapType } from "../../types/types";
 import { spriteType } from "../../types/types";
 import { spriteAssetsType } from "../../types/types";
 
+
 interface keyType {
   up: Phaser.Input.Keyboard.Key;
   down: Phaser.Input.Keyboard.Key;
   left: Phaser.Input.Keyboard.Key;
   right: Phaser.Input.Keyboard.Key;
 }
-
-// interface animationType {
-//   key: string;
-//   frames: number[];
-// }
-
-// interface spriteType {
-//   key: string;
-//   initialState: number;
-//   animations: animationType[];
-// }
-
-// interface spriteSheetType {
-//   key: string;
-//   path: string;
-//   frameWidth: number;
-//   frameHeight: number;
-// }
-
-//spriteSheet
-// const spriteSheetArray: spriteSheetType[] = [
-//   {
-//     key: "player",
-//     path: "assets/sprite.png",
-//     frameWidth: 16,
-//     frameHeight: 16,
-//   },
-// ];
-//sprite
-// const mySprite = {
-//   key: "player", //same as the sprite sheet key/reference to sprite sheet
-//   initialState: 6,
-//   animations: [
-//     {
-//       key: "right",
-//       frames: [1, 7, 1, 13],
-//     },
-//     {
-//       key: "left",
-//       frames: [1, 7, 1, 13],
-//     },
-//     {
-//       key: "up",
-//       frames: [2, 8, 2, 14],
-//     },
-//     {
-//       key: "down",
-//       frames: [0, 6, 0, 12],
-//     },
-//   ],
-// };
-// const mySprite2 = {
-//   key: "player", //same as the sprite sheet key/reference to sprite sheet
-//   initialState: 3,
-//   animations: [
-//     {
-//       key: "right",
-//       frames: [4, 10, 4, 16],
-//     },
-//     {
-//       key: "left",
-//       frames: [4, 10, 4, 16],
-//     },
-//     {
-//       key: "up",
-//       frames: [5, 11, 5, 17],
-//     },
-//     {
-//       key: "down",
-//       frames: [3, 9, 3, 15],
-//     },
-//   ],
-// };
-// const mySprite11 = {
-//   key: "player", //same as the sprite sheet key/reference to sprite sheet
-//   initialState: 21,
-//   animations: [
-//     {
-//       key: "right",
-//       frames: [22, 28, 22, 34],
-//     },
-//     {
-//       key: "left",
-//       frames: [22, 28, 22, 34],
-//     },
-//     {
-//       key: "up",
-//       frames: [23, 29, 23, 35],
-//     },
-//     {
-//       key: "down",
-//       frames: [21, 27, 21, 33],
-//     },
-//   ],
-// };
-// const mySprite1 = {
-//   key: "player", //same as the sprite sheet key/reference to sprite sheet
-//   initialState: 18,
-//   animations: [
-//     {
-//       key: "right",
-//       frames: [19, 25, 19, 31],
-//     },
-//     {
-//       key: "left",
-//       frames: [19, 25, 19, 31],
-//     },
-//     {
-//       key: "up",
-//       frames: [20, 26, 20, 32],
-//     },
-//     {
-//       key: "down",
-//       frames: [18, 24, 18, 30],
-//     },
-//   ],
-// };
 export default class WorldScene extends Phaser.Scene {
   socket!: WebSocket | null;
   player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -141,6 +25,7 @@ export default class WorldScene extends Phaser.Scene {
   spriteAssets: spriteAssetsType[];
   sprites: spriteType[];
   mySpriteId!: number;
+  walkSound!: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound;
 
   constructor({
     scene,
@@ -168,6 +53,7 @@ export default class WorldScene extends Phaser.Scene {
 
   preload() {
     //assets such as tile image
+    this.load.audio('walking','assets/walking.mp3');
     this.mapData.assets?.forEach((asset) => {
       this.load.image(`${asset.id.toString()}`, asset.path);
     });
@@ -216,7 +102,8 @@ export default class WorldScene extends Phaser.Scene {
     this.mySpriteId = Math.floor(Math.random() * this.sprites.length);
     const mySprite = this.sprites[this.mySpriteId];
     this.spawnArea = this.map.getObjectLayer("spawn")?.objects;
-    // const spawnPoints = this.map.findObject('spawn zone',(obj) => obj.name)
+    //music
+    this.walkSound = this.sound.add('walking')
 
     //loading assetsl into the screen
     this.mapData.assets?.forEach((assets) => {
@@ -247,11 +134,6 @@ export default class WorldScene extends Phaser.Scene {
       mySprite.initialState,
     );
 
-    //adding shadows
-    // this.player.preFX?.addShadow(-5, 20, 0.006, 1, 0x333333, 10);
-    //setting depth of layers above sprite
-    // layers[layers.length - 1].setDepth(1); //spawn should be the last layer in the array
-    //no need of this will remove later..... after fixing layer in tiled images
     layers[layers.length - 2].setDepth(1); //foreground should
 
     //setting collision of the sprite with obstacles
@@ -269,9 +151,12 @@ export default class WorldScene extends Phaser.Scene {
       sprite.animations.map((animations) => {
         this.anims.create({
           key: `${animations.key}-${animations.spriteId}`,
-          frames: this.anims.generateFrameNumbers(`${mySprite.key.toString()}-sprite`, {
-            frames: animations.frames,
-          }),
+          frames: this.anims.generateFrameNumbers(
+            `${mySprite.key.toString()}-sprite`,
+            {
+              frames: animations.frames,
+            },
+          ),
           frameRate: 10,
           repeat: -1,
         });
@@ -411,19 +296,25 @@ export default class WorldScene extends Phaser.Scene {
     );
     this.cameras.main.setZoom(2.5);
     this.cameras.main.startFollow(this.player);
+    // bgMusic.play();
   }
 
   update(): void {
+    // this.walkSound.stop();
     this.player.body.setVelocity(0);
-
+    
     //movements
     if (this.cursors && this.cursors.left.isDown) {
+      // this.walkSound.play();
       this.player.body.setVelocityX(-80);
     } else if (this.cursors && this.cursors.right.isDown) {
+      // this.walkSound.play();
       this.player.body.setVelocityX(80);
     } else if (this.cursors && this.cursors.down.isDown) {
+      // this.walkSound.play()
       this.player.body.setVelocityY(80);
     } else if (this.cursors && this.cursors.up.isDown) {
+      // this.walkSound.play();
       this.player.body.setVelocityY(-80);
     }
 

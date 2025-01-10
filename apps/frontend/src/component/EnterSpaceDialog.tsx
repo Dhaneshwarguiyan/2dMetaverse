@@ -24,11 +24,32 @@ const EnterSpaceDialog = () => {
         },
       );
       if (response.data.message) {
+        addVisitedSpaces();
         dispatch(initMap(roomCode));
         navigate(`${roomCode}`);
+        closeDialog();
       } else {
         console.log("No room exists");
       }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addVisitedSpaces = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API}/api/v1/maps/visitedSpaces`,
+        {
+          room: roomCode,
+        },
+        {
+          headers: {
+            Authorization: `${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      console.log(response);
     } catch (error) {
       console.log(error);
     }

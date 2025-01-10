@@ -420,6 +420,13 @@
     redux-thunk "^3.1.0"
     reselect "^5.1.0"
 
+"@repo/db@*", "@repo/db@file:/home/dhane/Desktop/2dMetaverse/2d-metaverse/metaverse/packages/database":
+  version "0.0.0"
+  resolved "file:packages/database"
+  dependencies:
+    "@prisma/client" "6.1.0"
+    prisma "^6.1.0"
+
 "@repo/eslint-config@*", "@repo/eslint-config@file:/home/dhane/Desktop/2dMetaverse/2d-metaverse/metaverse/packages/eslint-config":
   version "0.0.0"
   resolved "file:packages/eslint-config"
@@ -1288,6 +1295,11 @@ clone@^1.0.2:
   version "1.0.4"
   resolved "https://registry.npmjs.org/clone/-/clone-1.0.4.tgz"
   integrity sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==
+
+clsx@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.npmjs.org/clsx/-/clsx-2.1.1.tgz"
+  integrity sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==
 
 color-convert@^1.9.0:
   version "1.9.3"
@@ -2182,6 +2194,7 @@ fresh@0.5.2:
   dependencies:
     "@reduxjs/toolkit" "^2.5.0"
     axios "^1.7.9"
+    motion "^11.15.0"
     phaser "^3.87.0"
     prettier "^3.4.2"
     react "^18.3.1"
@@ -2458,7 +2471,7 @@ http-proxy-agent@^7.0.0, http-proxy-agent@^7.0.1:
   version "1.0.0"
   resolved "file:apps/http"
   dependencies:
-    "@prisma/client" "6.1.0"
+    "@repo/db" "*"
     "@types/express" "^5.0.0"
     axios "^1.7.9"
     cors "^2.8.5"
@@ -3741,7 +3754,7 @@ rc@^1.0.1, rc@^1.1.6:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-"react-dom@^18.0.0 || ^19.0.0", react-dom@>=18:
+"react-dom@^18 || ^19", "react-dom@^18.0.0 || ^19.0.0", react-dom@>=18:
   version "19.0.0"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-19.0.0.tgz"
   integrity sha512-4GV5sHFG0e/0AD4X+ySy6UJd3jVl1iNsNHdpad0qhABJ11twS3TTBnseqsKurKcsNqCEFeGL3uLpVChpIO3QfQ==
@@ -3798,7 +3811,14 @@ react-router@7.1.0:
     set-cookie-parser "^2.6.0"
     turbo-stream "2.4.0"
 
-"react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.9.0 || ^17.0.0 || ^18 || ^19", "react@^18.0 || ^19", "react@^18.0.0 || ^19.0.0", react@^19.0.0, react@>=18:
+react-toastify@^11.0.2:
+  version "11.0.2"
+  resolved "https://registry.npmjs.org/react-toastify/-/react-toastify-11.0.2.tgz"
+  integrity sha512-GjHuGaiXMvbls3ywqv8XdWONwrcO4DXCJIY1zVLkHU73gEElKvTTXNI5Vom3s/k/M8hnkrfsqgBSX3OwmlonbA==
+  dependencies:
+    clsx "^2.1.1"
+
+"react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.9.0 || ^17.0.0 || ^18 || ^19", "react@^18 || ^19", "react@^18.0 || ^19", "react@^18.0.0 || ^19.0.0", react@^19.0.0, react@>=18:
   version "19.0.0"
   resolved "https://registry.npmjs.org/react/-/react-19.0.0.tgz"
   integrity sha512-V8AVnmPIICiWpGfm6GLzCR/W5FXLchHop40W4nXBmdlEceh16rCN8O8LNWm5bh5XUX91fh7KpA+W0TgMKmgTpQ==

@@ -3,7 +3,7 @@ import express from "express";
 const router = express.Router();
 
 //controllers import 
-import { createMaps,createLayers,createAssets,createSpaces,deleteSpaces,getUserSpaces,checkSpace,getMap,getAllMaps } from "../controllers/mapControllers";
+import { createMaps,createLayers,createAssets,createSpaces,deleteSpaces,getUserSpaces,checkSpace,getMap,getAllMaps,getVisitedSpaces,addVisitedSpaces,removeVisitedSpaces } from "../controllers/mapControllers";
 //create maps
 router.post("/create",createMaps);
 
@@ -31,5 +31,11 @@ router.get("/space/:spaceId", getMap);
 
 //Not yet implemented completely
 router.get("/all", getAllMaps);
+
+router.post('/visitedSpaces',addVisitedSpaces);
+
+router.get('/visitedSpaces',getVisitedSpaces);
+
+router.post('/visitedSpaces/remove',removeVisitedSpaces);
 
 export default router;

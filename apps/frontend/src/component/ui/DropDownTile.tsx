@@ -2,6 +2,7 @@ import { ReactElement } from "react";
 import { logoutUser } from "../../slices/userslice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface propType {
   icon?: ReactElement;
@@ -13,10 +14,13 @@ const DropDownTile = ({ icon, text }: propType) => {
   const navigate = useNavigate();
   const clickHandler = () => {
     if (text === "Logout") {
-      localStorage.setItem("token", "");
-      localStorage.setItem("username", "");
-      navigate("/");
-      dispatch(logoutUser());
+      toast.success(`Logged out`);
+      setTimeout(() => {
+        localStorage.setItem("token", "");
+        localStorage.setItem("username", "");
+        navigate("/");
+        dispatch(logoutUser());
+      }, 1000);
     }
   };
 

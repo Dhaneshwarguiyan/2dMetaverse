@@ -1,12 +1,16 @@
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 import { Request,Response } from "express";
+import dotenv from "dotenv";
+
 
 const prisma = new PrismaClient();
+dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 
 export const loginController = async (req:Request, res:Response) => {
+  console.log(JWT_SECRET);
     const { email, password } = req.body;
     try {
       const response = await prisma.user.findUnique({
@@ -23,7 +27,9 @@ export const loginController = async (req:Request, res:Response) => {
       }
       //401 Unauthorized: The user is not authenticated against the API
       res.status(401).send({ message: "Incorrect Credentials" });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
 export const signupController = async (req:Request, res:Response) => {

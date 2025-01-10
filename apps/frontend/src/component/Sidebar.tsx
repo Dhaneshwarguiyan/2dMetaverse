@@ -4,11 +4,15 @@ import Message from "../icons/Message";
 import Chat from "./Chat";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import Pause from "../icons/Pause";
+import Play from "../icons/Play";
+import { toggleAudio } from "../slices/audioSlice";
+import bgMusic from '../assets/background.mp3';
 
 interface messageType {
-  // id: number;
   message: string;
-  // read:boolean;
   sender: string;
 }
 
@@ -17,6 +21,8 @@ const Sidebar = ({ socket, room }: { socket: WebSocket; room: string }) => {
   const [messages, setMessages] = useState<messageType[]>();
   const [newMessages, setNewMessages] = useState<number>(0);
 
+  const isPlay = useSelector((state:RootState)=>state.audio.play);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const getAllMessages = async () => {
@@ -44,11 +50,11 @@ const Sidebar = ({ socket, room }: { socket: WebSocket; room: string }) => {
       const parsedData = JSON.parse(event.data);
       if (parsedData && parsedData.type === "message") {
         //creating notification if the tab is closed
-        if (!messageDialog) {
-          setNewMessages((prev) => {
-            return prev + 1;
-          });
-        }
+        // if (!messageDialog) {
+        //   setNewMessages((prev) => {
+        //     return prev + 1;
+        //   });
+        // }
         const { sender, message } = parsedData.payload;
         setMessages((prev) => {
           if (prev) return [...prev, { sender, message }];
@@ -61,14 +67,36 @@ const Sidebar = ({ socket, room }: { socket: WebSocket; room: string }) => {
     } else {
       console.log("Socket not ready");
     }
-
     return () => {
       socket.removeEventListener("message", messageEvent);
     };
   }, [socket]);
 
+  const newAudio = new Audio(bgMusic);
+  useEffect(()=>{
+    if(isPlay){
+      newAudio.play();
+    }else{
+      newAudio.pause();
+    }
+    return ()=>{
+      newAudio.pause();
+    }
+  },[isPlay])
+
   return (
     <div className="h-screen absolute bottom-0 bg-white flex flex-col justify-end p-3 py-5 gap-4">
+        <span
+        className="rounded-full flex justify-center items-center w-[50px] h-[50px] shadow-deep cursor-pointer text-blue-600"
+        onClick={() => {
+          dispatch(toggleAudio());
+        }}
+      >
+        {isPlay ? 
+        <Play />:
+        <Pause />  
+      }
+      </span>
       <span
         className="rounded-full flex justify-center items-center w-[50px] h-[50px]  shadow-deep cursor-pointer text-blue-600 relative"
         onClick={() => {

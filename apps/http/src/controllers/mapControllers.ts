@@ -106,6 +106,62 @@ export const getUserSpaces = async (req:Request,res:Response) => {
     }
   }
 
+export const addVisitedSpaces = async (req:Request,res:Response) => {
+  try {
+    const id = req.userId;
+    const { room } = req.body;
+    console.log(room)
+    const response = await prisma.user.update({
+      where:{id:Number(id)},
+      data:{
+        visitedRooms:{
+          push:[room]
+        }
+      }
+    })
+    console.log(response);
+    res.send(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({message:"Internal server error"});
+  }
+}
+
+export const removeVisitedSpaces = async (req:Request,res:Response)=>{
+  try {
+    const id = req.userId;
+    const { room } = req.body; //room = ["room1","room2","room3"]
+    const response = await prisma.user.update({
+      where:{id:Number(id)},
+      data:{
+        visitedRooms:{
+          set:room
+        }
+      }
+    })
+    res.send(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({message:"Internal server error"});
+  }
+}
+
+export const getVisitedSpaces = async (req:Request, res:Response) => {
+  try {
+    const id = req.userId;
+    const response = await prisma.user.findUnique({
+      where:{id:Number(id)},
+      select:{
+        visitedRooms:true
+      }
+    })
+    res.send(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({message:"Internal server error"})
+  }
+}
+
 export const checkSpace =  async (req:Request,res:Response) => {
     try {
       const room = req.params.spaceId;

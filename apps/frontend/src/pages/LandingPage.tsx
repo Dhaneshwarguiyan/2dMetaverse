@@ -7,7 +7,7 @@ import LineAnimation from "../component/ui/LineAnimation";
 
 const LandingPage = () => {
   return (
-    <div className="h-screen w-screen mx-auto overflow-x-hidden bg-black">
+    <div className="h-screen w-screen mx-auto overflow-x-hidden bg-black scrollbar">
       <Hero />
       <Discover />
       <LineAnimation />
